@@ -224,6 +224,7 @@
             this.btnExpandAll.TabIndex = 12;
             this.btnExpandAll.Text = "Expand All";
             this.btnExpandAll.UseVisualStyleBackColor = false;
+            this.btnExpandAll.Click += new System.EventHandler(this.btnExpandAll_Click);
             // 
             // btnCollapseAll
             // 
@@ -235,6 +236,7 @@
             this.btnCollapseAll.TabIndex = 13;
             this.btnCollapseAll.Text = "Collapse All";
             this.btnCollapseAll.UseVisualStyleBackColor = false;
+            this.btnCollapseAll.Click += new System.EventHandler(this.btnCollapseAll_Click);
             // 
             // ManageRoles
             // 

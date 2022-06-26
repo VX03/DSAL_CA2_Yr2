@@ -66,7 +66,7 @@
             this.btnCancel.BackColor = System.Drawing.Color.Red;
             this.btnCancel.Location = new System.Drawing.Point(255, 328);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(151, 29);
+            this.btnCancel.Size = new System.Drawing.Size(151, 42);
             this.btnCancel.TabIndex = 25;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
@@ -76,7 +76,7 @@
             this.btnAdd.BackColor = System.Drawing.Color.MediumSlateBlue;
             this.btnAdd.Location = new System.Drawing.Point(55, 328);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(151, 29);
+            this.btnAdd.Size = new System.Drawing.Size(151, 42);
             this.btnAdd.TabIndex = 24;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = false;

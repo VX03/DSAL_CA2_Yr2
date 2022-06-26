@@ -100,20 +100,22 @@
             this.btnAdd.BackColor = System.Drawing.Color.MediumSlateBlue;
             this.btnAdd.Location = new System.Drawing.Point(129, 261);
             this.btnAdd.Name = "btnAdd";
-            this.btnAdd.Size = new System.Drawing.Size(151, 29);
+            this.btnAdd.Size = new System.Drawing.Size(151, 40);
             this.btnAdd.TabIndex = 6;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // btnCancel
             // 
             this.btnCancel.BackColor = System.Drawing.Color.Red;
             this.btnCancel.Location = new System.Drawing.Point(329, 261);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(151, 29);
+            this.btnCancel.Size = new System.Drawing.Size(151, 40);
             this.btnCancel.TabIndex = 7;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // AddRole
             // 
