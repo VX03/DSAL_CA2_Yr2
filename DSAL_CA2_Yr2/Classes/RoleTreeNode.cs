@@ -45,5 +45,28 @@ namespace DSAL_CA2_Yr2.Classes
 
             this.Nodes.Add(roleNode);
         }
+        public void UpdateRole(string roleName, bool projectleader)
+        {
+            this.Text = roleName;
+            this.Role.RoleName = roleName;
+            this.Role.ProjectLeader = projectleader;
+        }
+        public void RemoveRole(string roleId)
+        {
+            for(int i = 0; i < this.SubordinateRoles.Count; i++)
+            {
+                if(this.SubordinateRoles[i].Role.RoleId.Equals(roleId))
+                {
+                    
+                    this.Nodes.Remove(this.SubordinateRoles[i]);
+                    this.SubordinateRoles.Remove(this.SubordinateRoles[i]);
+                }
+                if(this.SubordinateRoles.Count != 0 && i<this.SubordinateRoles.Count) 
+                {
+                    this.SubordinateRoles[i].RemoveRole(roleId);
+                }
+
+            }
+        }
     }
 }
