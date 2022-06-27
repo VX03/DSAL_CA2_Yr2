@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Text;
 using System.Windows.Forms;
+using DSAL_CA2_Yr2.Classes;
 
 namespace DSAL_CA2_Yr2
 {
@@ -12,6 +13,7 @@ namespace DSAL_CA2_Yr2
     {
         public delegate void EditRoleDelegate(string roleName, bool projectLeader);
         public EditRoleDelegate EditRoleCallbackFn;
+        private General general = new General();
         public EditRole(string roleName,string parentName,string roleuuid,bool leader)
         {
             InitializeComponent();
@@ -23,15 +25,24 @@ namespace DSAL_CA2_Yr2
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            
             string name = tbName.Text;
-            bool checkedLeader = cbLeader.Checked;
-            EditRoleCallbackFn(name, checkedLeader);
-            this.DialogResult = DialogResult.OK;
+            bool checkName = general.checkAlphabetAndSpace(name);
+            if (checkName)
+            {
+                bool checkedLeader = cbLeader.Checked;
+                EditRoleCallbackFn(name, checkedLeader);
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+                MessageBox.Show("Name contains special character(s) or number(s)");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
         }
+
+
     }
 }

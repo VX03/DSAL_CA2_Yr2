@@ -41,6 +41,8 @@ namespace DSAL_CA2_Yr2.Classes
             get { return _subordinateRoles; }
             set { _subordinateRoles = value; }
         }
+
+        // Update / Add / Remove ------------------------------------------------------------------------------------------
         public void AddRoleSubordinate(RoleTreeNode roleNode)
         {
             roleNode.TopRole = this;
@@ -69,7 +71,10 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }//end of Remove Role
-        public void SaveToFileBinary(RoleTreeNode root)
+        // End of Update / Add / Remove -----------------------------------------------------------------------------------
+
+        // File IO --------------------------------------------------------------------------------------------------------
+        public void SaveToFileBinary()
         {
             try
             {
@@ -86,7 +91,7 @@ namespace DSAL_CA2_Yr2.Classes
             {
                 MessageBox.Show(ex.Message);
             }
-        } //End of SaveToFileBinary(PROBLEM)
+        } //End of SaveToFileBinary
         public RoleTreeNode LoadFromFileBinary()
         {
             try
@@ -114,30 +119,18 @@ namespace DSAL_CA2_Yr2.Classes
                 return null ;
             }
 
-        }//end of ReadFromFileBinary(PROBLEM)
-        public void RebuildTreeNodes()
-        {
-            this.Text = this.Role.RoleName;
-            if (this._subordinateRoles.Count > 0)//Note: This if block may not be necessary at all. Though the logic works.
-            {
-                int i = 0;
-                for (i = 0; i < this._subordinateRoles.Count; i++)
-                {
-                    this.Nodes.Add(this._subordinateRoles[i]);
-                    this._subordinateRoles[i].TopRole = this;
-                    this._subordinateRoles[i].RebuildTreeNodes();
-                }
-            }
+        }//end of ReadFromFileBinary
 
-        }
+        // [ SERIALIZE ]
         public void GetObjectData(SerializationInfo info, StreamingContext context)
         {
-            //add the required data.
+            //add the required data to file
             info.AddValue("Role", _role);
             info.AddValue("SubordinateRoles", _subordinateRoles);
             info.AddValue("TopRole", _topRole);
 
-        }
+        }//end of GetObjectData [ SERIALIZE ]
+        // [DESERIALIZE]
         protected RoleTreeNode(SerializationInfo info, StreamingContext context)
         {
             if (info == null)
@@ -146,6 +139,24 @@ namespace DSAL_CA2_Yr2.Classes
             this.TopRole = (RoleTreeNode)info.GetValue("TopRole", typeof(RoleTreeNode));
             this.SubordinateRoles = (List<RoleTreeNode>)info.GetValue("SubordinateRoles", typeof(List<RoleTreeNode>));
 
-        }
+        }//end of RoleTreeNode [ DESERIALIZE ]
+
+        // End Of File IO -------------------------------------------------------------------------------------------------
+        public void RebuildTreeNodes()
+        {
+            this.Text = this.Role.RoleName;
+            if (this.SubordinateRoles.Count > 0)
+            {
+                int i = 0;
+                for (i = 0; i < this.SubordinateRoles.Count; i++)
+                {
+                    this.Nodes.Add(this.SubordinateRoles[i]);
+                    this.SubordinateRoles[i].TopRole = this;
+                    this.SubordinateRoles[i].RebuildTreeNodes();
+                }
+            }
+
+        }//End of RebuildTreeNodes
+
     }
 }

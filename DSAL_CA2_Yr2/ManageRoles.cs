@@ -21,6 +21,7 @@ namespace DSAL_CA2_Yr2
             InitializeComponent();
         }
 
+        // Load data from binary file / automatically generate data
         private void ManageRoles_Load(object sender, EventArgs e)
         {
             treeViewRole.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewRole_NodeMouseClick);
@@ -29,34 +30,22 @@ namespace DSAL_CA2_Yr2
 
             if (_root == null)
             {
-                _root = new RoleTreeNode(new Role("Root", false));
-
-                RoleTreeNode Clusterhead = new RoleTreeNode(new Role("Clusterhead", false));
-                RoleTreeNode Manager = new RoleTreeNode(new Role("Manager", false));
-                RoleTreeNode ProjectManager = new RoleTreeNode(new Role("Project Manager", false));
-                RoleTreeNode ProjectLeader = new RoleTreeNode(new Role("Project Leader", true));
-                RoleTreeNode backend = new RoleTreeNode(new Role("Backend Developer", false));
-                RoleTreeNode frontend = new RoleTreeNode(new Role("Frontend Developer", false));
-                RoleTreeNode database = new RoleTreeNode(new Role("Database Engineer", false));
-                RoleTreeNode analyst = new RoleTreeNode(new Role("System Analyst", false));
-
-                _root.AddRoleSubordinate(Clusterhead);
-                Clusterhead.AddRoleSubordinate(Manager);
-                Manager.AddRoleSubordinate(ProjectManager);
-                ProjectManager.AddRoleSubordinate(ProjectLeader);
-                ProjectLeader.AddRoleSubordinate(backend);
-                ProjectLeader.AddRoleSubordinate(frontend);
-                ProjectLeader.AddRoleSubordinate(database);
-                ProjectLeader.AddRoleSubordinate(analyst);
+                AutomaticGenerateRole();
+                MessageBox.Show("There is no Data in file. Data is automatically created and saved to file");
+                _root.SaveToFileBinary();
 
             }//Automatically Create roles
-
-            _root.RebuildTreeNodes();
+            else
+            {
+                _root.RebuildTreeNodes();
+            }
             treeViewRole.Nodes.Add(_root);
             treeViewRole.ExpandAll();
 
         }//manageRoles_load
-        private void treeViewRole_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)//(PROBLEM)
+
+        // Create Context Menu on Right Click ----------------------------------------------------------------------------------------
+        private void treeViewRole_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;
             if (_currentSelectedRole != null)
@@ -103,7 +92,9 @@ namespace DSAL_CA2_Yr2
             }
         }//end of createContextMenu
 
-        // Edit/update/remove role ---------------------------------------------------------------------------
+        // End of Create Context Menu on Right Click ---------------------------------------------------------------------------------
+
+        // Edit/update/remove role in Context Menu -----------------------------------------------------------------------------------
 
         // Add Role
         private void MenuItemAddRole_Click(object sender, EventArgs e)
@@ -124,7 +115,7 @@ namespace DSAL_CA2_Yr2
         }//end of MenuItemAddRole_Click
         private void AddRoleCallbackFn(string roleName, bool projectLeader)
         {
-            tbConsole.Text = "Role Added:\r\nName: "+roleName+"\r\nProject Leader:"+projectLeader.ToString();
+            tbConsole.Text = "Role Added:\r\nName: "+roleName+"\r\nProject Leader: "+projectLeader.ToString();
             RoleTreeNode tempRole = new RoleTreeNode(new Role(roleName, projectLeader));
             _currentSelectedRole.AddRoleSubordinate(tempRole);
         }//end of AddRoleCallbackFn
@@ -153,7 +144,7 @@ namespace DSAL_CA2_Yr2
         }// End of MenuItemEditRole_Click
         private void EditRoleCallbackFn(string roleName, bool projectLeader) 
         {
-            tbConsole.Text = "Edited Role:\r\nName:"+roleName+"\r\nProjectLeader:"+projectLeader.ToString();
+            tbConsole.Text = "Edited Role:\r\nName: "+roleName+"\r\nProjectLeader: "+projectLeader.ToString();
             _currentSelectedRole.UpdateRole(roleName,projectLeader);
 
         }//end of EditRoleCallbackFn
@@ -167,7 +158,9 @@ namespace DSAL_CA2_Yr2
             tbConsole.Text = name+" has been removed";
         }// End of MenuItemRemoveRole_Click
 
-        // End of Edit/update/remove Role ---------------------------------------------------------------------
+        // End of Edit/update/remove Role in Context Menu -----------------------------------------------------------------------------
+
+        // Collapse and Expand TreeView------------------------------------------------------------------------------------------------
         private void btnExpandAll_Click(object sender, EventArgs e)
         {
             treeViewRole.ExpandAll();
@@ -177,9 +170,73 @@ namespace DSAL_CA2_Yr2
             treeViewRole.CollapseAll();
         }
 
-        private void btnSave_Click(object sender, EventArgs e)//(PROBLEM)
+        // End Of Collapse and Expand TreeView-----------------------------------------------------------------------------------------
+
+        // Save and Load (File IO) ----------------------------------------------------------------------------------------------------
+        private void btnSave_Click(object sender, EventArgs e)
         {
-            _root.SaveToFileBinary(_root);
+            _root.SaveToFileBinary();
+        }// btnSave_Click
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            // Clear all Nodes in treeView
+            treeViewRole.Nodes.Clear();
+            // Load from binary
+            _root = _root.LoadFromFileBinary();
+            // Add to treeView
+            _root.RebuildTreeNodes();
+            treeViewRole.Nodes.Add(_root);
+            treeViewRole.ExpandAll();
+
+        }// End of btnLoad_Click
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            // Clear all Nodes in treeView
+            treeViewRole.Nodes.Clear();
+            // Load from binary
+            _root = _root.LoadFromFileBinary();
+
+            if (_root == null)
+            {
+                AutomaticGenerateRole();
+                MessageBox.Show("There is no Data in file. Data is automatically created and saved to file");
+                _root.SaveToFileBinary();
+
+            }//Automatically Create roles
+            else
+            {
+                _root.RebuildTreeNodes();
+            }
+            treeViewRole.Nodes.Add(_root);
+            treeViewRole.ExpandAll();
+
+        }// End of btnReset_Click
+
+        // End of Save and Load (File IO) ----------------------------------------------------------------------------------------------
+
+        // Other Functions -------------------------------------------------------------------------------------------------------------
+        private void AutomaticGenerateRole()
+        {
+            _root = new RoleTreeNode(new Role("Root", false));
+
+            RoleTreeNode Clusterhead = new RoleTreeNode(new Role("Clusterhead", false));
+            RoleTreeNode Manager = new RoleTreeNode(new Role("Manager", false));
+            RoleTreeNode ProjectManager = new RoleTreeNode(new Role("Project Manager", false));
+            RoleTreeNode ProjectLeader = new RoleTreeNode(new Role("Project Leader", true));
+            RoleTreeNode backend = new RoleTreeNode(new Role("Backend Developer", false));
+            RoleTreeNode frontend = new RoleTreeNode(new Role("Frontend Developer", false));
+            RoleTreeNode database = new RoleTreeNode(new Role("Database Engineer", false));
+            RoleTreeNode analyst = new RoleTreeNode(new Role("System Analyst", false));
+
+            _root.AddRoleSubordinate(Clusterhead);
+            Clusterhead.AddRoleSubordinate(Manager);
+            Manager.AddRoleSubordinate(ProjectManager);
+            ProjectManager.AddRoleSubordinate(ProjectLeader);
+            ProjectLeader.AddRoleSubordinate(backend);
+            ProjectLeader.AddRoleSubordinate(frontend);
+            ProjectLeader.AddRoleSubordinate(database);
+            ProjectLeader.AddRoleSubordinate(analyst);
         }
+        // End of Other Functions ------------------------------------------------------------------------------------------------------
     }
 }
