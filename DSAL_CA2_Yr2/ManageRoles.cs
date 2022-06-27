@@ -14,7 +14,7 @@ namespace DSAL_CA2_Yr2
 {
     public partial class ManageRoles : Form
     {
-        private RoleTreeNode _root;
+        private RoleTreeNode _root = new RoleTreeNode();
         private RoleTreeNode _currentSelectedRole;
         public ManageRoles()
         {
@@ -24,31 +24,39 @@ namespace DSAL_CA2_Yr2
         private void ManageRoles_Load(object sender, EventArgs e)
         {
             treeViewRole.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewRole_NodeMouseClick);
-            _root = new RoleTreeNode(new Role("Root",false));
-            
-            RoleTreeNode Clusterhead = new RoleTreeNode(new Role("Clusterhead", false));
-            RoleTreeNode Manager = new RoleTreeNode(new Role("Manager", false));
-            RoleTreeNode ProjectManager = new RoleTreeNode(new Role("Project Manager", false));
-            RoleTreeNode ProjectLeader = new RoleTreeNode(new Role("Project Leader", true));
-            RoleTreeNode backend = new RoleTreeNode(new Role("Backend Developer", false));
-            RoleTreeNode frontend = new RoleTreeNode(new Role("Frontend Developer", false));
-            RoleTreeNode database = new RoleTreeNode(new Role("Database Engineer", false));
-            RoleTreeNode analyst = new RoleTreeNode(new Role("System Analyst", false));
 
-            _root.AddRoleSubordinate(Clusterhead);
-            Clusterhead.AddRoleSubordinate(Manager);
-            Manager.AddRoleSubordinate(ProjectManager);
-            ProjectManager.AddRoleSubordinate(ProjectLeader);
-            ProjectLeader.AddRoleSubordinate(backend);
-            ProjectLeader.AddRoleSubordinate(frontend);
-            ProjectLeader.AddRoleSubordinate(database);
-            ProjectLeader.AddRoleSubordinate(analyst);
+            _root = _root.LoadFromFileBinary();
 
+            if (_root == null)
+            {
+                _root = new RoleTreeNode(new Role("Root", false));
+
+                RoleTreeNode Clusterhead = new RoleTreeNode(new Role("Clusterhead", false));
+                RoleTreeNode Manager = new RoleTreeNode(new Role("Manager", false));
+                RoleTreeNode ProjectManager = new RoleTreeNode(new Role("Project Manager", false));
+                RoleTreeNode ProjectLeader = new RoleTreeNode(new Role("Project Leader", true));
+                RoleTreeNode backend = new RoleTreeNode(new Role("Backend Developer", false));
+                RoleTreeNode frontend = new RoleTreeNode(new Role("Frontend Developer", false));
+                RoleTreeNode database = new RoleTreeNode(new Role("Database Engineer", false));
+                RoleTreeNode analyst = new RoleTreeNode(new Role("System Analyst", false));
+
+                _root.AddRoleSubordinate(Clusterhead);
+                Clusterhead.AddRoleSubordinate(Manager);
+                Manager.AddRoleSubordinate(ProjectManager);
+                ProjectManager.AddRoleSubordinate(ProjectLeader);
+                ProjectLeader.AddRoleSubordinate(backend);
+                ProjectLeader.AddRoleSubordinate(frontend);
+                ProjectLeader.AddRoleSubordinate(database);
+                ProjectLeader.AddRoleSubordinate(analyst);
+
+            }//Automatically Create roles
+
+            _root.RebuildTreeNodes();
             treeViewRole.Nodes.Add(_root);
             treeViewRole.ExpandAll();
 
         }//manageRoles_load
-        private void treeViewRole_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        private void treeViewRole_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)//(PROBLEM)
         {
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;
             if (_currentSelectedRole != null)
@@ -56,7 +64,7 @@ namespace DSAL_CA2_Yr2
                 tbId.Text = _currentSelectedRole.Role.RoleId;
                 tbName.Text = _currentSelectedRole.Role.RoleName;
                 cbLeader.Checked = _currentSelectedRole.Role.ProjectLeader;
-
+                tbConsole.Text = _currentSelectedRole.Role.RoleName + " has been selected";
                 if (e.Button == MouseButtons.Right)
                 {    
                     createContextMenu(_currentSelectedRole);
@@ -68,7 +76,7 @@ namespace DSAL_CA2_Yr2
         {
             ToolStripMenuItem menuItemAddRole,menuItemRemoveRole,menuItemEditRole;
 
-            if (node != null && node.Parent == null)
+            if (node != null && node.TopRole == null)
             {
                 ContextMenuStrip menuStrip = new ContextMenuStrip();
                 menuItemAddRole = new ToolStripMenuItem("Add Role");
@@ -94,7 +102,10 @@ namespace DSAL_CA2_Yr2
                 this.ContextMenuStrip = menuStrip;
             }
         }//end of createContextMenu
-        // Add Role---------------------------------------------------------------------------------------
+
+        // Edit/update/remove role ---------------------------------------------------------------------------
+
+        // Add Role
         private void MenuItemAddRole_Click(object sender, EventArgs e)
         {
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;
@@ -111,14 +122,14 @@ namespace DSAL_CA2_Yr2
                 addForm.ShowDialog();
             }
         }//end of MenuItemAddRole_Click
-        private void AddRoleCallbackFn( string roleName, bool projectLeader)
+        private void AddRoleCallbackFn(string roleName, bool projectLeader)
         {
             tbConsole.Text = "Role Added:\r\nName: "+roleName+"\r\nProject Leader:"+projectLeader.ToString();
             RoleTreeNode tempRole = new RoleTreeNode(new Role(roleName, projectLeader));
             _currentSelectedRole.AddRoleSubordinate(tempRole);
         }//end of AddRoleCallbackFn
-        // End of Add Role--------------------------------------------------------------------------------
-        // Edit Role---------------------------------------------------------------------------------------
+
+        // Edit Role
         private void MenuItemEditRole_Click(object sender, EventArgs e)
         {
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;
@@ -131,27 +142,32 @@ namespace DSAL_CA2_Yr2
                 string roleName = _currentSelectedRole.Role.RoleName;
                 string uuid = _currentSelectedRole.Role.RoleId;
                 bool projectLeader = _currentSelectedRole.Role.ProjectLeader;
-                string parentName = _currentSelectedRole.Parent.Text;
+                string parentName = _currentSelectedRole.TopRole.Role.RoleName;
+
                 tbConsole.Text = roleName + " has been selected to be edited";
-                EditRole editForm = new EditRole(roleName,parentName,uuid,projectLeader);
+
+                EditRole editForm = new EditRole(roleName, parentName, uuid, projectLeader);
                 editForm.EditRoleCallbackFn = EditRoleCallbackFn;
                 editForm.ShowDialog();
             }
-        }
+        }// End of MenuItemEditRole_Click
         private void EditRoleCallbackFn(string roleName, bool projectLeader) 
         {
             tbConsole.Text = "Edited Role:\r\nName:"+roleName+"\r\nProjectLeader:"+projectLeader.ToString();
             _currentSelectedRole.UpdateRole(roleName,projectLeader);
 
-        }
-        // End of Edit Role--------------------------------------------------------------------------------
-        // Remove Role---------------------------------------------------------------------------------------
+        }//end of EditRoleCallbackFn
+
+        //Remove Role
         private void MenuItemRemoveRole_Click(object sender, EventArgs e)
         {
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;
+            string name = _currentSelectedRole.Role.RoleName;
             _root.RemoveRole(_currentSelectedRole.Role.RoleId);
-        }
-        // End of Remove Role--------------------------------------------------------------------------------
+            tbConsole.Text = name+" has been removed";
+        }// End of MenuItemRemoveRole_Click
+
+        // End of Edit/update/remove Role ---------------------------------------------------------------------
         private void btnExpandAll_Click(object sender, EventArgs e)
         {
             treeViewRole.ExpandAll();
@@ -159,6 +175,11 @@ namespace DSAL_CA2_Yr2
         private void btnCollapseAll_Click(object sender, EventArgs e)
         {
             treeViewRole.CollapseAll();
+        }
+
+        private void btnSave_Click(object sender, EventArgs e)//(PROBLEM)
+        {
+            _root.SaveToFileBinary(_root);
         }
     }
 }
