@@ -39,6 +39,15 @@
             this.btnSave = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.cbSalaryAccountable = new System.Windows.Forms.CheckBox();
+            this.tbProject = new System.Windows.Forms.TextBox();
+            this.tbRole = new System.Windows.Forms.TextBox();
+            this.tbSalary = new System.Windows.Forms.TextBox();
+            this.tbName = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.cbDummyData = new System.Windows.Forms.CheckBox();
             this.tbReportingOfficer = new System.Windows.Forms.TextBox();
@@ -46,15 +55,6 @@
             this.Reporting = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.label10 = new System.Windows.Forms.Label();
-            this.tbName = new System.Windows.Forms.TextBox();
-            this.tbSalary = new System.Windows.Forms.TextBox();
-            this.tbRole = new System.Windows.Forms.TextBox();
-            this.tbProject = new System.Windows.Forms.TextBox();
-            this.cbSalaryAccountable = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -68,6 +68,7 @@
             this.btnCollapseAll.TabIndex = 24;
             this.btnCollapseAll.Text = "Collapse All";
             this.btnCollapseAll.UseVisualStyleBackColor = false;
+            this.btnCollapseAll.Click += new System.EventHandler(this.btnCollapseAll_Click);
             // 
             // btnExpandAll
             // 
@@ -79,6 +80,7 @@
             this.btnExpandAll.TabIndex = 23;
             this.btnExpandAll.Text = "Expand All";
             this.btnExpandAll.UseVisualStyleBackColor = false;
+            this.btnExpandAll.Click += new System.EventHandler(this.btnExpandAll_Click);
             // 
             // label7
             // 
@@ -96,9 +98,9 @@
             this.label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label6.Location = new System.Drawing.Point(410, 24);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(154, 20);
+            this.label6.Size = new System.Drawing.Size(191, 20);
             this.label6.TabIndex = 21;
-            this.label6.Text = "Role Node Tree View";
+            this.label6.Text = "Employee Node Tree View";
             // 
             // treeViewEmployee
             // 
@@ -182,6 +184,98 @@
             this.groupBox1.TabIndex = 14;
             this.groupBox1.TabStop = false;
             // 
+            // cbSalaryAccountable
+            // 
+            this.cbSalaryAccountable.AutoSize = true;
+            this.cbSalaryAccountable.Enabled = false;
+            this.cbSalaryAccountable.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.cbSalaryAccountable.Location = new System.Drawing.Point(189, 342);
+            this.cbSalaryAccountable.Name = "cbSalaryAccountable";
+            this.cbSalaryAccountable.Size = new System.Drawing.Size(172, 24);
+            this.cbSalaryAccountable.TabIndex = 15;
+            this.cbSalaryAccountable.Text = "Salary Accountable?";
+            this.cbSalaryAccountable.UseVisualStyleBackColor = true;
+            // 
+            // tbProject
+            // 
+            this.tbProject.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbProject.Enabled = false;
+            this.tbProject.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.tbProject.Location = new System.Drawing.Point(181, 289);
+            this.tbProject.Name = "tbProject";
+            this.tbProject.Size = new System.Drawing.Size(180, 27);
+            this.tbProject.TabIndex = 14;
+            // 
+            // tbRole
+            // 
+            this.tbRole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbRole.Enabled = false;
+            this.tbRole.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.tbRole.Location = new System.Drawing.Point(181, 246);
+            this.tbRole.Name = "tbRole";
+            this.tbRole.Size = new System.Drawing.Size(180, 27);
+            this.tbRole.TabIndex = 13;
+            // 
+            // tbSalary
+            // 
+            this.tbSalary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbSalary.Enabled = false;
+            this.tbSalary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.tbSalary.Location = new System.Drawing.Point(181, 207);
+            this.tbSalary.Name = "tbSalary";
+            this.tbSalary.Size = new System.Drawing.Size(180, 27);
+            this.tbSalary.TabIndex = 12;
+            // 
+            // tbName
+            // 
+            this.tbName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbName.Enabled = false;
+            this.tbName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.tbName.Location = new System.Drawing.Point(181, 164);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(180, 27);
+            this.tbName.TabIndex = 11;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label10.Location = new System.Drawing.Point(39, 291);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(65, 20);
+            this.label10.TabIndex = 10;
+            this.label10.Text = "Projects";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label9.Location = new System.Drawing.Point(39, 246);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(40, 20);
+            this.label9.TabIndex = 9;
+            this.label9.Text = "Role";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label8.Location = new System.Drawing.Point(39, 207);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(86, 20);
+            this.label8.TabIndex = 8;
+            this.label8.Text = "Salary ($$)";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label3.Location = new System.Drawing.Point(39, 164);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(51, 20);
+            this.label3.TabIndex = 7;
+            this.label3.Text = "Name";
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -227,6 +321,7 @@
             // Reporting
             // 
             this.Reporting.AutoSize = true;
+            this.Reporting.Enabled = false;
             this.Reporting.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.Reporting.Location = new System.Drawing.Point(39, 121);
             this.Reporting.Name = "Reporting";
@@ -250,101 +345,9 @@
             this.label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.Location = new System.Drawing.Point(69, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(233, 20);
+            this.label1.Size = new System.Drawing.Size(270, 20);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Selected Role Node Information";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.Location = new System.Drawing.Point(39, 164);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(51, 20);
-            this.label3.TabIndex = 7;
-            this.label3.Text = "Name";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(39, 207);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(86, 20);
-            this.label8.TabIndex = 8;
-            this.label8.Text = "Salary ($$)";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label9.Location = new System.Drawing.Point(39, 246);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(40, 20);
-            this.label9.TabIndex = 9;
-            this.label9.Text = "Role";
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label10.Location = new System.Drawing.Point(39, 291);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(65, 20);
-            this.label10.TabIndex = 10;
-            this.label10.Text = "Projects";
-            // 
-            // tbName
-            // 
-            this.tbName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbName.Enabled = false;
-            this.tbName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tbName.Location = new System.Drawing.Point(181, 164);
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(180, 27);
-            this.tbName.TabIndex = 11;
-            // 
-            // tbSalary
-            // 
-            this.tbSalary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbSalary.Enabled = false;
-            this.tbSalary.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tbSalary.Location = new System.Drawing.Point(181, 207);
-            this.tbSalary.Name = "tbSalary";
-            this.tbSalary.Size = new System.Drawing.Size(180, 27);
-            this.tbSalary.TabIndex = 12;
-            // 
-            // tbRole
-            // 
-            this.tbRole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbRole.Enabled = false;
-            this.tbRole.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tbRole.Location = new System.Drawing.Point(181, 246);
-            this.tbRole.Name = "tbRole";
-            this.tbRole.Size = new System.Drawing.Size(180, 27);
-            this.tbRole.TabIndex = 13;
-            // 
-            // tbProject
-            // 
-            this.tbProject.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbProject.Enabled = false;
-            this.tbProject.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tbProject.Location = new System.Drawing.Point(181, 289);
-            this.tbProject.Name = "tbProject";
-            this.tbProject.Size = new System.Drawing.Size(180, 27);
-            this.tbProject.TabIndex = 14;
-            // 
-            // cbSalaryAccountable
-            // 
-            this.cbSalaryAccountable.AutoSize = true;
-            this.cbSalaryAccountable.Enabled = false;
-            this.cbSalaryAccountable.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.cbSalaryAccountable.Location = new System.Drawing.Point(189, 342);
-            this.cbSalaryAccountable.Name = "cbSalaryAccountable";
-            this.cbSalaryAccountable.Size = new System.Drawing.Size(172, 24);
-            this.cbSalaryAccountable.TabIndex = 15;
-            this.cbSalaryAccountable.Text = "Salary Accountable?";
-            this.cbSalaryAccountable.UseVisualStyleBackColor = true;
+            this.label1.Text = "Selected Employee Node Information";
             // 
             // ManageEmployee
             // 
@@ -364,6 +367,7 @@
             this.Controls.Add(this.groupBox1);
             this.Name = "ManageEmployee";
             this.Text = "ManageEmployee";
+            this.Load += new System.EventHandler(this.ManageEmployee_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);

@@ -71,6 +71,24 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }//end of Remove Role
+
+        public void getSubordinateRoleById(string roleId, ref List<RoleTreeNode> roleList)
+        {
+            if (this.Role.RoleId.Equals(roleId))
+            {
+                roleList = this.SubordinateRoles;
+            }
+            for (int i = 0; i <this.SubordinateRoles.Count; i++)
+            {
+                if (this.SubordinateRoles[i].Role.RoleId.Equals(roleId))
+                {
+                    roleList = this.SubordinateRoles[i].SubordinateRoles;
+                }
+
+                    this.SubordinateRoles[i].getSubordinateRoleById(roleId,ref roleList);
+            }
+            
+        }
         // End of Update / Add / Remove -----------------------------------------------------------------------------------
 
         // File IO --------------------------------------------------------------------------------------------------------

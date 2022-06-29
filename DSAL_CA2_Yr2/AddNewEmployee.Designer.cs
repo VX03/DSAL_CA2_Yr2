@@ -70,6 +70,7 @@
             this.btnCancel.TabIndex = 25;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnAdd
             // 
@@ -80,6 +81,7 @@
             this.btnAdd.TabIndex = 24;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // cbDummyData
             // 
@@ -90,10 +92,12 @@
             this.cbDummyData.TabIndex = 23;
             this.cbDummyData.Text = "Dummy Data?";
             this.cbDummyData.UseVisualStyleBackColor = true;
+            this.cbDummyData.CheckedChanged += new System.EventHandler(this.cbDummyData_CheckedChanged);
             // 
             // tbReportingOfficer
             // 
             this.tbReportingOfficer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbReportingOfficer.Enabled = false;
             this.tbReportingOfficer.Location = new System.Drawing.Point(236, 82);
             this.tbReportingOfficer.Name = "tbReportingOfficer";
             this.tbReportingOfficer.Size = new System.Drawing.Size(216, 27);
@@ -102,7 +106,6 @@
             // tbName
             // 
             this.tbName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbName.Enabled = false;
             this.tbName.Location = new System.Drawing.Point(236, 129);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(216, 27);

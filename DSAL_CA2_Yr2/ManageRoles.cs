@@ -16,6 +16,7 @@ namespace DSAL_CA2_Yr2
     {
         private RoleTreeNode _root = new RoleTreeNode();
         private RoleTreeNode _currentSelectedRole;
+        private General general = new General();
         public ManageRoles()
         {
             InitializeComponent();
@@ -30,7 +31,7 @@ namespace DSAL_CA2_Yr2
 
             if (_root == null)
             {
-                AutomaticGenerateRole();
+                _root = general.AutomaticGenerateRole();
                 MessageBox.Show("There is no Data in file. Data is automatically created and saved to file");
                 _root.SaveToFileBinary();
 
@@ -198,7 +199,7 @@ namespace DSAL_CA2_Yr2
 
             if (_root == null)
             {
-                AutomaticGenerateRole();
+                _root = general.AutomaticGenerateRole();
                 MessageBox.Show("There is no Data in file. Data is automatically created and saved to file");
                 _root.SaveToFileBinary();
 
@@ -214,29 +215,5 @@ namespace DSAL_CA2_Yr2
 
         // End of Save and Load (File IO) ----------------------------------------------------------------------------------------------
 
-        // Other Functions -------------------------------------------------------------------------------------------------------------
-        private void AutomaticGenerateRole()
-        {
-            _root = new RoleTreeNode(new Role("Root", false));
-
-            RoleTreeNode Clusterhead = new RoleTreeNode(new Role("Clusterhead", false));
-            RoleTreeNode Manager = new RoleTreeNode(new Role("Manager", false));
-            RoleTreeNode ProjectManager = new RoleTreeNode(new Role("Project Manager", false));
-            RoleTreeNode ProjectLeader = new RoleTreeNode(new Role("Project Leader", true));
-            RoleTreeNode backend = new RoleTreeNode(new Role("Backend Developer", false));
-            RoleTreeNode frontend = new RoleTreeNode(new Role("Frontend Developer", false));
-            RoleTreeNode database = new RoleTreeNode(new Role("Database Engineer", false));
-            RoleTreeNode analyst = new RoleTreeNode(new Role("System Analyst", false));
-
-            _root.AddRoleSubordinate(Clusterhead);
-            Clusterhead.AddRoleSubordinate(Manager);
-            Manager.AddRoleSubordinate(ProjectManager);
-            ProjectManager.AddRoleSubordinate(ProjectLeader);
-            ProjectLeader.AddRoleSubordinate(backend);
-            ProjectLeader.AddRoleSubordinate(frontend);
-            ProjectLeader.AddRoleSubordinate(database);
-            ProjectLeader.AddRoleSubordinate(analyst);
-        }
-        // End of Other Functions ------------------------------------------------------------------------------------------------------
     }
 }
