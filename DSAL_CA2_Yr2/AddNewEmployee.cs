@@ -45,16 +45,21 @@ namespace DSAL_CA2_Yr2
                     }
                 }
 
-                if (checkname && role != null)
+                if (checkname && role != null && salary > 0)
                 {
                     AddEmployeeCallbackFn(name, salary, dummy, accountable, role);
                     this.DialogResult = DialogResult.OK;
                 }
-                else if(!checkname)
+                // errors
+                else if (salary > 0) //salary
+                {
+                    MessageBox.Show("Unable to put a salary lesser or equal to 0");
+                }
+                else if(!checkname) //name
                 {
                     MessageBox.Show("Name contains special character(s) or number(s)");
                 }
-                else
+                else //selected value
                 {
                     MessageBox.Show("Please select a value from the list");
                 }

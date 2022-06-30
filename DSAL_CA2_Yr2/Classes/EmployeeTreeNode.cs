@@ -33,12 +33,33 @@ namespace DSAL_CA2_Yr2.Classes
             get { return _topEmployee; }
             set { _topEmployee = value; }
         }
+        public List<EmployeeTreeNode> SubordinateEmployee
+        {
+            get { return _subordinateEmployee; }
+            set { _subordinateEmployee = value; }
+        }
         public void AddEmployeeSubordinate(EmployeeTreeNode employeeNode)
         {
             employeeNode.TopEmployee = this;
-            _subordinateEmployee.Add(employeeNode); 
+            SubordinateEmployee.Add(employeeNode); 
 
             this.Nodes.Add(employeeNode);
-        }
+        }//end of AddEmployeeSubordinate
+        public void RemoveEmployee(string employeeId)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.EmployeeId.Equals(employeeId))
+                {
+                    this.Nodes.Remove(this.SubordinateEmployee[i]);
+                    this.SubordinateEmployee.Remove(this.SubordinateEmployee[i]);
+                    return;
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].RemoveEmployee(employeeId);
+                }
+            }
+        }//end of Remove Employee
     }
 }

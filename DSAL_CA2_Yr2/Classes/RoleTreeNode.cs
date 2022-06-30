@@ -71,7 +71,6 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }//end of Remove Role
-
         public void getSubordinateRoleById(string roleId, ref List<RoleTreeNode> roleList)
         {
             if (this.Role.RoleId.Equals(roleId))

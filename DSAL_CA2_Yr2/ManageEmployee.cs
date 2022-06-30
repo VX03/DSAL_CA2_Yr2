@@ -100,7 +100,7 @@ namespace DSAL_CA2_Yr2
 
                 //add event handler
                 //menuItemEditRole.Click += new EventHandler(MenuItemEditRole_Click);
-                //menuItemRemoveRole.Click += new EventHandler(MenuItemRemoveRole_Click);
+                menuItemRemoveEmployee.Click += new EventHandler(MenuItemRemoveEmployee_Click);
                 //menu strip add item
 
                 menuStrip.Items.Add(menuItemEditEmployee);
@@ -127,7 +127,7 @@ namespace DSAL_CA2_Yr2
                 //add event handler
                 menuItemAddEmployee.Click += new EventHandler(MenuItemAddEmployee_Click);
                 //menuItemEditRole.Click += new EventHandler(MenuItemEditRole_Click);
-                //menuItemRemoveRole.Click += new EventHandler(MenuItemRemoveRole_Click);
+                menuItemRemoveEmployee.Click += new EventHandler(MenuItemRemoveEmployee_Click);
                 //menu strip add item
                 menuStrip.Items.Add(menuItemAddEmployee);
                 menuStrip.Items.Add(menuItemEditEmployee);
@@ -139,7 +139,7 @@ namespace DSAL_CA2_Yr2
 
         // End of Create Context Menu on Right Click -----------------------------------------------------------------------------------------
 
-        // Edit/update/remove Employee in Context Menu ---------------------------------------------------------------------------------------
+        // Edit/update/remove/add Employee in Context Menu -----------------------------------------------------------------------------------
 
         // Add Employee
         private void MenuItemAddEmployee_Click(object sender, EventArgs e)
@@ -170,7 +170,20 @@ namespace DSAL_CA2_Yr2
             _currentSelectedEmployee.AddEmployeeSubordinate(employee);
         }// end of AddEmployeeCallbackFn
 
-        // End of Edit/update/remove Employee in Context Menu --------------------------------------------------------------------------------
+        // Remove Employee
+        private void MenuItemRemoveEmployee_Click(object sender, EventArgs e)
+        {
+            _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
+
+            if (_currentSelectedEmployee.Employee.Project == null)
+            {
+                string name = _currentSelectedEmployee.Employee.EmployeeName;
+                _root.RemoveEmployee(_currentSelectedEmployee.Employee.EmployeeId);
+                tbConsole.Text = name + " has been removed";
+            }
+        }
+
+        // End of Edit/update/remove/add Employee in Context Menu ----------------------------------------------------------------------------
 
         // Collapse and Expand TreeView-------------------------------------------------------------------------------------------------------
 
