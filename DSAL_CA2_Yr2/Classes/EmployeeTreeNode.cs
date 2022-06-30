@@ -49,7 +49,7 @@ namespace DSAL_CA2_Yr2.Classes
         }//end of AddEmployeeSubordinate
         public void UpdateEmployee(string employeeName, double salary, bool dummy, bool sa)
         {
-            this.Text = employeeName;
+            this.Text = employeeName + " - " + _employee.Role.RoleName + " (S$" + salary + ")";
             this.Employee.EmployeeName = employeeName;
             this.Employee.Salary = salary;
             this.Employee.DummyData = dummy;

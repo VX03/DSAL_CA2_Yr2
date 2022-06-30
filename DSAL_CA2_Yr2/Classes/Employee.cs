@@ -20,6 +20,7 @@ namespace DSAL_CA2_Yr2.Classes
             this._role = role;
             this._dummyData = dummy;
             this._salaryAccountable = accountable;
+            this.Project = null;
             this._employeeId = UUID.GenerateUUID();
         }
         public Employee()

@@ -44,19 +44,25 @@ namespace DSAL_CA2_Yr2
                 string id = "", project = "", name = "", salary = "", role = "", officername = "";
 
                 id = _currentSelectedEmployee.Employee.EmployeeId;
-                project = _currentSelectedEmployee.Employee.Project;
+                
                 name = _currentSelectedEmployee.Employee.EmployeeName;
                 salary = _currentSelectedEmployee.Employee.Salary.ToString();
                 role = _currentSelectedEmployee.Employee.Role.RoleName;
                 if (_currentSelectedEmployee.TopEmployee != null)
+                {
+                    if (_currentSelectedEmployee.Employee.Project != null)
+                    {
+                        project = _currentSelectedEmployee.Employee.Project;
+                    }
+                    else
+                        project = "N.A.";
+                    
                     officername = _currentSelectedEmployee.TopEmployee.Employee.EmployeeName;
+                }
                 else
                     officername = "N.A";
 
-                if (project == null)
-                {
-                    project = "No Projects";
-                }
+                
 
                     
                 tbId.Text = id;
