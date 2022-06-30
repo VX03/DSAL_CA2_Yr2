@@ -42,7 +42,8 @@ namespace DSAL_CA2_Yr2.Classes
             set { _subordinateRoles = value; }
         }
 
-        // Update / Add / Remove ------------------------------------------------------------------------------------------
+        // Funtions -------------------------------------------------------------------------------------------------------
+
         public void AddRoleSubordinate(RoleTreeNode roleNode)
         {
             roleNode.TopRole = this;
@@ -88,9 +89,36 @@ namespace DSAL_CA2_Yr2.Classes
             }
             
         }
-        // End of Update / Add / Remove -----------------------------------------------------------------------------------
+        public bool checkHaveSubordinateRoleById(string roleId)
+        {
+            List<RoleTreeNode> check = new List<RoleTreeNode>();
+            getSubordinateRoleById(roleId, ref check);
 
-        // File IO --------------------------------------------------------------------------------------------------------
+            if (check.Count != 0)
+                return true;
+            else
+                return false;
+        }
+        public void RebuildTreeNodes()
+        {
+            this.Text = this.Role.RoleName;
+            if (this.SubordinateRoles.Count > 0)
+            {
+                int i = 0;
+                for (i = 0; i < this.SubordinateRoles.Count; i++)
+                {
+                    this.Nodes.Add(this.SubordinateRoles[i]);
+                    this.SubordinateRoles[i].TopRole = this;
+                    this.SubordinateRoles[i].RebuildTreeNodes();
+                }
+            }
+
+        }//End of RebuildTreeNodes
+
+        // End of Functions -----------------------------------------------------------------------------------------------
+
+        // File IO Functions ----------------------------------------------------------------------------------------------
+
         public void SaveToFileBinary()
         {
             try
@@ -158,22 +186,6 @@ namespace DSAL_CA2_Yr2.Classes
 
         }//end of RoleTreeNode [ DESERIALIZE ]
 
-        // End Of File IO -------------------------------------------------------------------------------------------------
-        public void RebuildTreeNodes()
-        {
-            this.Text = this.Role.RoleName;
-            if (this.SubordinateRoles.Count > 0)
-            {
-                int i = 0;
-                for (i = 0; i < this.SubordinateRoles.Count; i++)
-                {
-                    this.Nodes.Add(this.SubordinateRoles[i]);
-                    this.SubordinateRoles[i].TopRole = this;
-                    this.SubordinateRoles[i].RebuildTreeNodes();
-                }
-            }
-
-        }//End of RebuildTreeNodes
-
+        // End Of File IO Functions ---------------------------------------------------------------------------------------
     }
 }

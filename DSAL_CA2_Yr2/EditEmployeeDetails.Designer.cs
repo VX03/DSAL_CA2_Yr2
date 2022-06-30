@@ -58,6 +58,7 @@
             // 
             // comboRole
             // 
+            this.comboRole.Enabled = false;
             this.comboRole.FormattingEnabled = true;
             this.comboRole.Location = new System.Drawing.Point(287, 239);
             this.comboRole.Name = "comboRole";
@@ -101,6 +102,7 @@
             this.btnCancel.TabIndex = 38;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnAdd
             // 
@@ -111,6 +113,7 @@
             this.btnAdd.TabIndex = 37;
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // cbDummyData
             // 
@@ -121,10 +124,12 @@
             this.cbDummyData.TabIndex = 36;
             this.cbDummyData.Text = "Dummy Data?";
             this.cbDummyData.UseVisualStyleBackColor = true;
+            this.cbDummyData.CheckedChanged += new System.EventHandler(this.cbDummyData_CheckedChanged);
             // 
             // tbReportingOfficer
             // 
             this.tbReportingOfficer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbReportingOfficer.Enabled = false;
             this.tbReportingOfficer.Location = new System.Drawing.Point(287, 102);
             this.tbReportingOfficer.Name = "tbReportingOfficer";
             this.tbReportingOfficer.Size = new System.Drawing.Size(216, 27);
@@ -133,7 +138,6 @@
             // tbName
             // 
             this.tbName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbName.Enabled = false;
             this.tbName.Location = new System.Drawing.Point(287, 149);
             this.tbName.Name = "tbName";
             this.tbName.Size = new System.Drawing.Size(216, 27);
@@ -173,6 +177,7 @@
             // tbId
             // 
             this.tbId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbId.Enabled = false;
             this.tbId.Location = new System.Drawing.Point(287, 60);
             this.tbId.Name = "tbId";
             this.tbId.Size = new System.Drawing.Size(216, 27);
@@ -209,7 +214,6 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Enabled = false;
             this.Name = "EditEmployeeDetails";
             this.Text = "EditEmployeeDetails";
             this.ResumeLayout(false);

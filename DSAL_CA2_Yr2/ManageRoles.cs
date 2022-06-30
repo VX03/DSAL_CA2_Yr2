@@ -97,7 +97,7 @@ namespace DSAL_CA2_Yr2
 
         // Edit/update/remove role in Context Menu -----------------------------------------------------------------------------------
 
-        // Add Role
+        // Add Role [ DONE ]
         private void MenuItemAddRole_Click(object sender, EventArgs e)
         {
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;
@@ -119,9 +119,10 @@ namespace DSAL_CA2_Yr2
             tbConsole.Text = "Role Added:\r\nName: "+roleName+"\r\nProject Leader: "+projectLeader.ToString();
             RoleTreeNode tempRole = new RoleTreeNode(new Role(roleName, projectLeader));
             _currentSelectedRole.AddRoleSubordinate(tempRole);
+            treeViewRole.SelectedNode.Expand();
         }//end of AddRoleCallbackFn
 
-        // Edit Role
+        // Edit Role [ DONE ]
         private void MenuItemEditRole_Click(object sender, EventArgs e)
         {
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;
@@ -150,7 +151,7 @@ namespace DSAL_CA2_Yr2
 
         }//end of EditRoleCallbackFn
 
-        //Remove Role
+        //Remove Role [ DONE ]
         private void MenuItemRemoveRole_Click(object sender, EventArgs e)
         {
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;

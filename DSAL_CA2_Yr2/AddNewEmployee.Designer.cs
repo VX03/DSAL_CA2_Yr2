@@ -40,7 +40,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
             this.comboRole = new System.Windows.Forms.ComboBox();
-            this.cbSalryAccountable = new System.Windows.Forms.CheckBox();
+            this.cbSalaryAccountable = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // tbSalary
@@ -160,23 +160,25 @@
             this.comboRole.Size = new System.Drawing.Size(216, 28);
             this.comboRole.TabIndex = 29;
             // 
-            // cbSalryAccountable
+            // cbSalaryAccountable
             // 
-            this.cbSalryAccountable.AutoSize = true;
-            this.cbSalryAccountable.Enabled = false;
-            this.cbSalryAccountable.Location = new System.Drawing.Point(280, 278);
-            this.cbSalryAccountable.Name = "cbSalryAccountable";
-            this.cbSalryAccountable.Size = new System.Drawing.Size(165, 24);
-            this.cbSalryAccountable.TabIndex = 30;
-            this.cbSalryAccountable.Text = "Salary Accountable?";
-            this.cbSalryAccountable.UseVisualStyleBackColor = true;
+            this.cbSalaryAccountable.AutoSize = true;
+            this.cbSalaryAccountable.Checked = true;
+            this.cbSalaryAccountable.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbSalaryAccountable.Enabled = false;
+            this.cbSalaryAccountable.Location = new System.Drawing.Point(280, 278);
+            this.cbSalaryAccountable.Name = "cbSalaryAccountable";
+            this.cbSalaryAccountable.Size = new System.Drawing.Size(165, 24);
+            this.cbSalaryAccountable.TabIndex = 30;
+            this.cbSalaryAccountable.Text = "Salary Accountable?";
+            this.cbSalaryAccountable.UseVisualStyleBackColor = true;
             // 
             // AddNewEmployee
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(498, 404);
-            this.Controls.Add(this.cbSalryAccountable);
+            this.Controls.Add(this.cbSalaryAccountable);
             this.Controls.Add(this.comboRole);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.tbSalary);
@@ -210,6 +212,6 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ComboBox comboRole;
-        private System.Windows.Forms.CheckBox cbSalryAccountable;
+        private System.Windows.Forms.CheckBox cbSalaryAccountable;
     }
 }

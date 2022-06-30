@@ -34,7 +34,7 @@ namespace DSAL_CA2_Yr2
                 string name = tbName.Text;
                 bool checkname = general.checkAlphabetAndSpace(name);
                 bool dummy = cbDummyData.Checked;
-                bool accountable = cbSalryAccountable.Checked;
+                bool accountable = cbSalaryAccountable.Checked;
                 double salary = Double.Parse(tbSalary.Text);
                 Role role = null;
                 foreach (RoleTreeNode roleTreeNode in subordinateRoles)
@@ -83,12 +83,13 @@ namespace DSAL_CA2_Yr2
         {
             if (cbDummyData.Checked)
             {
-                cbSalryAccountable.Enabled = true;
+                cbSalaryAccountable.Enabled = true;
+                tbName.Text = "Dummy";
             }
             else
             {   
-                cbSalryAccountable.Checked = false;
-                cbSalryAccountable.Enabled = false;
+                cbSalaryAccountable.Checked = true;
+                cbSalaryAccountable.Enabled = false;
             }
         }// end of cbDummyData_CheckedChanged
     }

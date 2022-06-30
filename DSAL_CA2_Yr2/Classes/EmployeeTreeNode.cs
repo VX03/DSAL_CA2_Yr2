@@ -38,6 +38,8 @@ namespace DSAL_CA2_Yr2.Classes
             get { return _subordinateEmployee; }
             set { _subordinateEmployee = value; }
         }
+        // Funtions -------------------------------------------------------------------------------------------------------
+
         public void AddEmployeeSubordinate(EmployeeTreeNode employeeNode)
         {
             employeeNode.TopEmployee = this;
@@ -45,6 +47,14 @@ namespace DSAL_CA2_Yr2.Classes
 
             this.Nodes.Add(employeeNode);
         }//end of AddEmployeeSubordinate
+        public void UpdateEmployee(string employeeName, double salary, bool dummy, bool sa)
+        {
+            this.Text = employeeName;
+            this.Employee.EmployeeName = employeeName;
+            this.Employee.Salary = salary;
+            this.Employee.DummyData = dummy;
+            this.Employee.SalaryAccountable = sa;
+        }//End Of UpdateRole
         public void RemoveEmployee(string employeeId)
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
@@ -61,5 +71,11 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }//end of Remove Employee
+
+        // End of Functions -----------------------------------------------------------------------------------------------
+
+        // File IO Functions ----------------------------------------------------------------------------------------------
+
+        // End Of File IO Functions ---------------------------------------------------------------------------------------
     }
 }
