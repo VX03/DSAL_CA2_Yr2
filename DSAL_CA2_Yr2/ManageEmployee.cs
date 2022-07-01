@@ -225,12 +225,52 @@ namespace DSAL_CA2_Yr2
         }// end of EditEmployeeCallbackFn
 
         // Changing Role(s) / Reporting Officer [ NOT DONE ]
-        private void MenuItemChange_Click(object sender, EventArgs e) { }// end of MenuItemChange_Click
-        private void ChangeCallbackFn() { }//end of ChangeCallbackFn
+        private void MenuItemChange_Click(object sender, EventArgs e) 
+        {
+            _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
+
+            if (_currentSelectedEmployee == null)
+            {
+                tbConsole.Text = "You did not select any employee to change role / reporting officer.";
+            }
+            else
+            {
+                string employeeName = _currentSelectedEmployee.Employee.EmployeeName;
+                tbConsole.Text = employeeName + " has been selected to be change.";
+
+                //ChangeRoleOrOfficer changeForm = new ChangeRoleOrOfficer();
+                //changeForm.ChangeCallbackFn = ChangeCallbackFn;
+                //changeForm.ShowDialog();
+            }
+        }// end of MenuItemChange_Click
+        private void ChangeCallbackFn() 
+        {
+        
+        }// end of ChangeCallbackFn
 
         // Swaping Employee [ NOT DONE ]
-        private void MenuItemSwapEmployee_Click(object sender, EventArgs e) { }// end of MenuItemSwapEmployee_Click
-        private void SwapEmployeeCallbackFn() { }//end of SwapEmployeeCallbackFn
+        private void MenuItemSwapEmployee_Click(object sender, EventArgs e) 
+        {
+            _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
+
+            if (_currentSelectedEmployee == null)
+            {
+                tbConsole.Text = "You did not select any employee to swap roles with";
+            }
+            else
+            {
+                string employeeName = _currentSelectedEmployee.Employee.EmployeeName;
+                tbConsole.Text = employeeName + " has been selected to be swapped";
+
+                //ChangeRoleOrOfficer changeForm = new ChangeRoleOrOfficer();
+                //changeForm.ChangeCallbackFn = ChangeCallbackFn;
+                //changeForm.ShowDialog();
+            }
+        }// end of MenuItemSwapEmployee_Click
+        private void SwapEmployeeCallbackFn() 
+        {
+        
+        }//end of SwapEmployeeCallbackFn
 
         // Remove Employee [ NOT DONE / NEED CHANGING ]
         private void MenuItemRemoveEmployee_Click(object sender, EventArgs e)

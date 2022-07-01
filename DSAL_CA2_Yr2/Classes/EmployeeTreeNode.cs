@@ -39,7 +39,73 @@ namespace DSAL_CA2_Yr2.Classes
             set { _subordinateEmployee = value; }
         }
         // Funtions -------------------------------------------------------------------------------------------------------
+        public void getEmployeeById(string employeeId, ref EmployeeTreeNode employee)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.EmployeeId.Equals(employeeId))
+                {
+                    employee = this.SubordinateEmployee[i];
+                    return;
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getEmployeeById(employeeId,ref employee);
+                }
+            }
 
+        }
+        public void getEmployeeRolesById(string employeeId, ref List<EmployeeTreeNode> employeeList)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {   
+                if (this.SubordinateEmployee[i].Employee.EmployeeId.Equals(employeeId))
+                {
+                    employeeList.Add(this.SubordinateEmployee[i]);
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getEmployeeRolesById(employeeId, ref employeeList);
+                }
+            }
+        }// end of getEmployeeRolesById
+        public void getAllReportingOfficer(ref List<EmployeeTreeNode> employeeList)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (!this.Employee.Role.ProjectLeader)
+                {
+                    employeeList.Add(this.SubordinateEmployee[i]);
+                }
+
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getAllReportingOfficer(ref employeeList);
+                }
+            }
+        }// end of getAllReportingOfficer
+        public void setEmployeeTreeNodeText(string employeeId)
+        {
+            List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
+            
+            getEmployeeRolesById(employeeId, ref employeeList);
+            if(employeeList.Count > 1)
+            {
+                string text = "";
+                foreach(EmployeeTreeNode employeeTreeNode in employeeList)
+                {
+                    if(text == "")
+                        text += employeeTreeNode.Employee.Role.RoleName;
+                    else
+                        text += " ," + employeeTreeNode.Employee.Role.RoleName;
+                }
+
+                foreach(EmployeeTreeNode employeeTreeNode in employeeList)
+                {
+                    employeeTreeNode.Text = text +" (S$"+employeeTreeNode.Employee.Salary+")";
+                }
+            }
+        }// end of setEmployeeTreeNodeText
         public void AddEmployeeSubordinate(EmployeeTreeNode employeeNode)
         {
             employeeNode.TopEmployee = this;

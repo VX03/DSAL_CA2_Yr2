@@ -87,8 +87,8 @@ namespace DSAL_CA2_Yr2.Classes
 
                     this.SubordinateRoles[i].getSubordinateRoleById(roleId,ref roleList);
             }
-            
-        }
+
+        }// end of getSubordinateRoleById
         public bool checkHaveSubordinateRoleById(string roleId)
         {
             List<RoleTreeNode> check = new List<RoleTreeNode>();

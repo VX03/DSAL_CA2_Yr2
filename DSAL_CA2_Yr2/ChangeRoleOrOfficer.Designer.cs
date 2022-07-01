@@ -68,6 +68,8 @@
             // cbSalaryAccountable
             // 
             this.cbSalaryAccountable.AutoSize = true;
+            this.cbSalaryAccountable.Checked = true;
+            this.cbSalaryAccountable.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbSalaryAccountable.Enabled = false;
             this.cbSalaryAccountable.Location = new System.Drawing.Point(284, 291);
             this.cbSalaryAccountable.Name = "cbSalaryAccountable";
@@ -130,8 +132,9 @@
             this.btnAdd.Name = "btnAdd";
             this.btnAdd.Size = new System.Drawing.Size(151, 29);
             this.btnAdd.TabIndex = 52;
-            this.btnAdd.Text = "Change";
+            this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = false;
+            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
             // 
             // cbDummyData
             // 
@@ -179,9 +182,9 @@
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.label1.Location = new System.Drawing.Point(108, 30);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(317, 23);
+            this.label1.Size = new System.Drawing.Size(291, 23);
             this.label1.TabIndex = 46;
-            this.label1.Text = "Change Role and/or Reporting Officer";
+            this.label1.Text = "Add Role and/or Reporting Officer";
             // 
             // comboReportingOfficer
             // 
