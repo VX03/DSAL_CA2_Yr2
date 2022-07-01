@@ -71,7 +71,7 @@ namespace DSAL_CA2_Yr2.Classes
         }// end of getEmployeeRolesById
         public void getAllReportingOfficerDuplicate(string role,ref List<string> employeeList)
         {
-            if (this.Employee.Role.RoleName.Equals(role) && this.TopEmployee == null)
+            if (this.Employee.Role.RoleName.Equals(role))
             {
                 employeeList.Add(this.Employee.EmployeeName);
             }
@@ -87,7 +87,7 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
 
-        }// end of getAllReportingOfficer
+        }// end of getAllReportingOfficerDuplicate
         public List<string> getAllReportingOfficer(string role)
         {
             List<string> newEmployeeList = new List<string>();
@@ -102,7 +102,7 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
             return employeeList;
-        }
+        }// end of getAllReportingOfficer
         public void setEmployeeTreeNodeText(string employeeId)
         {
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
