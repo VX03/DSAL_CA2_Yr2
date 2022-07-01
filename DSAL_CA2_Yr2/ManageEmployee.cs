@@ -238,9 +238,16 @@ namespace DSAL_CA2_Yr2
                 string employeeName = _currentSelectedEmployee.Employee.EmployeeName;
                 tbConsole.Text = employeeName + " has been selected to be change.";
 
-                //ChangeRoleOrOfficer changeForm = new ChangeRoleOrOfficer();
+                ChangeRoleOrOfficer changeForm = new ChangeRoleOrOfficer(
+                    _currentSelectedEmployee.Employee.EmployeeId,
+                    _currentSelectedEmployee.Employee.Role.RoleName,
+                    _currentSelectedEmployee.Employee.EmployeeName,
+                    _currentSelectedEmployee.Employee.Salary,
+                    _currentSelectedEmployee.TopEmployee.Employee.Role.RoleName,
+                    _currentSelectedEmployee.TopEmployee.Employee.EmployeeName,
+                    _root);
                 //changeForm.ChangeCallbackFn = ChangeCallbackFn;
-                //changeForm.ShowDialog();
+                changeForm.ShowDialog();
             }
         }// end of MenuItemChange_Click
         private void ChangeCallbackFn() 

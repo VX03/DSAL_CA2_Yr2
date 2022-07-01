@@ -51,7 +51,7 @@ namespace DSAL_CA2_Yr2
                     this.DialogResult = DialogResult.OK;
                 }
                 // errors
-                else if (salary > 0) //salary
+                else if (salary < 0) //salary
                 {
                     MessageBox.Show("Unable to put a salary lesser or equal to 0");
                 }

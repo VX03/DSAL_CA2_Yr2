@@ -85,6 +85,7 @@
             this.comboRole.Name = "comboRole";
             this.comboRole.Size = new System.Drawing.Size(216, 28);
             this.comboRole.TabIndex = 57;
+            this.comboRole.SelectedIndexChanged += new System.EventHandler(this.comboRole_SelectedIndexChanged);
             // 
             // label5
             // 
@@ -124,6 +125,7 @@
             this.btnCancel.TabIndex = 53;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = false;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // btnAdd
             // 

@@ -55,7 +55,7 @@ namespace DSAL_CA2_Yr2.Classes
             }
 
         }
-        public void getEmployeeRolesById(string employeeId, ref List<EmployeeTreeNode> employeeList)
+        public void getSameEmployeeRolesById(string employeeId, ref List<EmployeeTreeNode> employeeList)
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
             {   
@@ -65,30 +65,49 @@ namespace DSAL_CA2_Yr2.Classes
                 }
                 if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
                 {
-                    this.SubordinateEmployee[i].getEmployeeRolesById(employeeId, ref employeeList);
+                    this.SubordinateEmployee[i].getSameEmployeeRolesById(employeeId, ref employeeList);
                 }
             }
         }// end of getEmployeeRolesById
-        public void getAllReportingOfficer(ref List<EmployeeTreeNode> employeeList)
+        public void getAllReportingOfficerDuplicate(string role,ref List<string> employeeList)
         {
+            if (this.Employee.Role.RoleName.Equals(role) && this.TopEmployee == null)
+            {
+                employeeList.Add(this.Employee.EmployeeName);
+            }
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
             {
-                if (!this.Employee.Role.ProjectLeader)
+                if (this.SubordinateEmployee[i].Employee.Role.RoleName.Equals(role))
                 {
-                    employeeList.Add(this.SubordinateEmployee[i]);
+                    employeeList.Add(this.SubordinateEmployee[i].Employee.EmployeeName);
                 }
-
                 if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
                 {
-                    this.SubordinateEmployee[i].getAllReportingOfficer(ref employeeList);
+                    this.SubordinateEmployee[i].getAllReportingOfficerDuplicate( role,ref employeeList);
                 }
             }
+
         }// end of getAllReportingOfficer
+        public List<string> getAllReportingOfficer(string role)
+        {
+            List<string> newEmployeeList = new List<string>();
+            List<string> employeeList = new List<string>();
+
+            getAllReportingOfficerDuplicate(role,ref newEmployeeList);
+            foreach(string employee in newEmployeeList)
+            {
+                if (!employeeList.Contains(employee))
+                {
+                    employeeList.Add(employee);
+                }
+            }
+            return employeeList;
+        }
         public void setEmployeeTreeNodeText(string employeeId)
         {
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
             
-            getEmployeeRolesById(employeeId, ref employeeList);
+            getSameEmployeeRolesById(employeeId, ref employeeList);
             if(employeeList.Count > 1)
             {
                 string text = "";
