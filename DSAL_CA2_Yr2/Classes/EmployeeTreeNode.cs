@@ -69,17 +69,17 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }// end of getEmployeeRolesById
-        public void getAllReportingOfficerDuplicate(string role,ref List<string> employeeList)
+        public void getAllReportingOfficerDuplicate(string role,ref List<Employee> employeeList)
         {
             if (this.Employee.Role.RoleName.Equals(role))
             {
-                employeeList.Add(this.Employee.EmployeeName);
+                employeeList.Add(this.Employee);
             }
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
             {
                 if (this.SubordinateEmployee[i].Employee.Role.RoleName.Equals(role))
                 {
-                    employeeList.Add(this.SubordinateEmployee[i].Employee.EmployeeName);
+                    employeeList.Add(this.SubordinateEmployee[i].Employee);
                 }
                 if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
                 {
@@ -90,16 +90,21 @@ namespace DSAL_CA2_Yr2.Classes
         }// end of getAllReportingOfficerDuplicate
         public List<string> getAllReportingOfficer(string role)
         {
-            List<string> newEmployeeList = new List<string>();
+            List<Employee> newEmployeeList = new List<Employee>();
+            List<Employee> checkEmployeeList = new List<Employee>();
             List<string> employeeList = new List<string>();
 
             getAllReportingOfficerDuplicate(role,ref newEmployeeList);
-            foreach(string employee in newEmployeeList)
+            foreach(Employee employee in newEmployeeList)
             {
-                if (!employeeList.Contains(employee))
+                if (!checkEmployeeList.Contains(employee))
                 {
-                    employeeList.Add(employee);
+                    checkEmployeeList.Add(employee);
                 }
+            }
+            foreach(Employee employee in checkEmployeeList)
+            {
+                employeeList.Add(employee.EmployeeName);
             }
             return employeeList;
         }// end of getAllReportingOfficer
