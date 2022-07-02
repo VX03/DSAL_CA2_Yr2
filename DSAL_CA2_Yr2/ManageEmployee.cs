@@ -224,7 +224,7 @@ namespace DSAL_CA2_Yr2
             tbConsole.Text = "Updated Employee:\r\nName: " + employeeName + "\r\nSalary: " + salary + "\r\nDummy Data: " + dummy + "\r\nSalary Accountable: " + sa;
         }// end of EditEmployeeCallbackFn
 
-        // Changing Role(s) / Reporting Officer [ NOT DONE ]
+        // Changing Role(s) / Reporting Officer [ DONE ]
         private void MenuItemChange_Click(object sender, EventArgs e) 
         {
             _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
@@ -246,16 +246,41 @@ namespace DSAL_CA2_Yr2
                     _currentSelectedEmployee.TopEmployee.Employee.Role.RoleName,
                     _currentSelectedEmployee.TopEmployee.Employee.EmployeeName,
                     _root);
-                //changeForm.ChangeCallbackFn = ChangeCallbackFn;
+                changeForm.ChangeCallbackFn = ChangeCallbackFn;
                 changeForm.ShowDialog();
             }
         }// end of MenuItemChange_Click
-        private void ChangeCallbackFn() 
+        private void ChangeCallbackFn(string id, string name, string salary, string role, string reportingOfficer, bool dummy, bool sa) 
         {
-        
+            try
+            {
+                EmployeeTreeNode officerNode = null;
+                RoleTreeNode selectedRole = null;
+                
+                //get role
+                _role.getRoleByName(role, ref selectedRole); 
+                //get reporting officer treeNode
+                _root.getReportingOfficerTreeNode(selectedRole.TopRole.Role.RoleId, reportingOfficer, ref officerNode);
+
+                //Create Employee and TreeNode
+                Employee newEmployee = new Employee(id, name, Double.Parse(salary), selectedRole.Role, dummy, sa);
+                EmployeeTreeNode treeNode = new EmployeeTreeNode(newEmployee);
+
+                //Add subordinate
+                officerNode.AddEmployeeSubordinate(treeNode);
+
+                //Set Text
+                _root.setEmployeeTreeNodeText(id);
+
+                tbConsole.Text = name + " has added " + role;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }// end of ChangeCallbackFn
 
-        // Swaping Employee [ NOT DONE ]
+        // Swaping Employee [ DONE?? NEED CHECKING ]
         private void MenuItemSwapEmployee_Click(object sender, EventArgs e) 
         {
             _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
@@ -269,43 +294,100 @@ namespace DSAL_CA2_Yr2
                 string employeeName = _currentSelectedEmployee.Employee.EmployeeName;
                 tbConsole.Text = employeeName + " has been selected to be swapped";
 
-                //ChangeRoleOrOfficer changeForm = new ChangeRoleOrOfficer();
-                //changeForm.ChangeCallbackFn = ChangeCallbackFn;
-                //changeForm.ShowDialog();
+                // Clone treeNode
+                EmployeeTreeNode root = (EmployeeTreeNode)_root.Clone();
+
+
+                ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
+                    (EmployeeTreeNode)root,
+                    _currentSelectedEmployee.Employee.EmployeeName+" - "+ _currentSelectedEmployee.Employee.Role.RoleName
+                    );
+                swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
+                swapForm.ShowDialog();
             }
         }// end of MenuItemSwapEmployee_Click
-        private void SwapEmployeeCallbackFn() 
+        private void SwapEmployeeCallbackFn(Employee selectedEmployee) 
         {
-        
+            string id  = _currentSelectedEmployee.Employee.EmployeeId;
+            string name = _currentSelectedEmployee.Employee.EmployeeName;
+            bool dummy = _currentSelectedEmployee.Employee.DummyData;
+            bool sa = _currentSelectedEmployee.Employee.SalaryAccountable;
+
+            EmployeeTreeNode employee = new EmployeeTreeNode();
+            _root.getEmployeeById(selectedEmployee.EmployeeId, ref employee);
+
+            // swap values
+            _currentSelectedEmployee.Employee.EmployeeId = employee.Employee.EmployeeId;
+            _currentSelectedEmployee.Employee.EmployeeName = employee.Employee.EmployeeName;
+            _currentSelectedEmployee.Employee.DummyData = employee.Employee.DummyData;
+            _currentSelectedEmployee.Employee.SalaryAccountable = employee.Employee.SalaryAccountable;
+
+            employee.Employee.EmployeeId = id;
+            employee.Employee.EmployeeName = name;
+            employee.Employee.DummyData = dummy;
+            _currentSelectedEmployee.Employee.SalaryAccountable = sa;
+
+            // set treeview text
+            employee.setEmployeeTreeNodeText();
+            _currentSelectedEmployee.setEmployeeTreeNodeText();
+
+            tbConsole.Text = employee.Employee.EmployeeName + " has been swapped with " + _currentSelectedEmployee.Employee.EmployeeName;
         }//end of SwapEmployeeCallbackFn
 
         // Remove Employee [ NOT DONE / NEED CHANGING ]
         private void MenuItemRemoveEmployee_Click(object sender, EventArgs e)
         {
             _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
-            
-            // if proj change to class, condition put as [ _currentSelectedEmployee.Employee.Project.Count == 0 ]
-            if(_currentSelectedEmployee.SubordinateEmployee.Count == 0 && _currentSelectedEmployee.Employee.Project == null)
+            List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
+            _root.getSameEmployeeRolesById(_currentSelectedEmployee.Employee.EmployeeId, ref employeeList);
+
+            if (employeeList.Count > 1)
             {
-                DialogResult dialogResult = MessageBox.Show("Confirm removal of employee? Click OK to proceed", "Confirm Deletion", MessageBoxButtons.YesNo);
-                if(dialogResult == DialogResult.Yes)
+                // There is no subordinate and project
+                if (
+                    _currentSelectedEmployee.SubordinateEmployee.Count == 0 &&
+                    _currentSelectedEmployee.Employee.Project == null
+                  )
                 {
-                    string name = _currentSelectedEmployee.Employee.EmployeeName;
-                    _root.RemoveEmployee(_currentSelectedEmployee.Employee.EmployeeId);
-                    tbConsole.Text = name + " has been removed";
+                    _root.RemoveEmployeeByIdAndRoleId(_currentSelectedEmployee.Employee.EmployeeId, _currentSelectedEmployee.Employee.Role.RoleId);
+                    _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
+                }
+
+                else
+                {
+                    string text = "Have subordinate or project";
+                    MessageBox.Show(text);
                 }
             }
-            // if proj change to class, condition put as [ _currentSelectedEmployee.Employee.Project.Count != 0 ]
-            else if (_currentSelectedEmployee.SubordinateEmployee.Count != 0 || _currentSelectedEmployee.Employee.Project != null)
+            else
             {
-                string text = "The employee can only be removed if there are no subordinates, no assigned projects or if after removal will still remain a full team. Would you like to swap the employee with another first?";
-                DialogResult dialogResult = MessageBox.Show(text, "Swap Employee", MessageBoxButtons.YesNo);
-                
-                // [ DO SWAPING HERE ]
-                if(dialogResult == DialogResult.Yes)
+                // if proj change to class, condition put as [ _currentSelectedEmployee.Employee.Project.Count == 0 ]
+                if (
+                    _currentSelectedEmployee.SubordinateEmployee.Count == 0 &&
+                    _currentSelectedEmployee.Employee.Project == null
+                  )
                 {
-                    
-                    MessageBox.Show("Swap here");
+
+                    DialogResult dialogResult = MessageBox.Show("Confirm removal of employee? Click OK to proceed", "Confirm Deletion", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        string name = _currentSelectedEmployee.Employee.EmployeeName;
+                        _root.RemoveEmployee(_currentSelectedEmployee.Employee.EmployeeId);
+                        tbConsole.Text = name + " has been removed";
+                    }
+                }
+                // if proj change to class, condition put as [ _currentSelectedEmployee.Employee.Project.Count != 0 ]
+                else if (_currentSelectedEmployee.SubordinateEmployee.Count != 0 || _currentSelectedEmployee.Employee.Project != null)
+                {
+                    string text = "The employee can only be removed if there are no subordinates, no assigned projects or if after removal will still remain a full team. Would you like to swap the employee with another first?";
+                    DialogResult dialogResult = MessageBox.Show(text, "Swap Employee", MessageBoxButtons.YesNo);
+
+                    // [ DO SWAPING HERE ]
+                    if (dialogResult == DialogResult.Yes)
+                    {
+
+                        MessageBox.Show("Swap here");
+                    }
                 }
             }
         }// end of MenuItemRemoveEmployee_Click

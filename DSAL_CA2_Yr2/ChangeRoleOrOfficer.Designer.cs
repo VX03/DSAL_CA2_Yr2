@@ -147,6 +147,7 @@
             this.cbDummyData.TabIndex = 51;
             this.cbDummyData.Text = "Dummy Data?";
             this.cbDummyData.UseVisualStyleBackColor = true;
+            this.cbDummyData.CheckedChanged += new System.EventHandler(this.cbDummyData_CheckedChanged);
             // 
             // tbName
             // 

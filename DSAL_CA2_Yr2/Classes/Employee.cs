@@ -23,6 +23,15 @@ namespace DSAL_CA2_Yr2.Classes
             this.Project = null;
             this._employeeId = UUID.GenerateUUID();
         }
+        public Employee(string id, string employeeName, double salary, Role role, bool dummy, bool accountable)
+        {
+            this._dummyData = dummy;
+            this._salaryAccountable = accountable;
+            this._employeeName = employeeName;
+            this._salary = salary;  
+            this._role = role;
+            this._employeeId = id;
+        }
         public Employee()
         {
             this._employeeId= UUID.GenerateUUID();
@@ -35,6 +44,7 @@ namespace DSAL_CA2_Yr2.Classes
         public string EmployeeId
         { 
             get { return _employeeId; }
+            set { _employeeId = value; }
         }
         public double Salary
         {

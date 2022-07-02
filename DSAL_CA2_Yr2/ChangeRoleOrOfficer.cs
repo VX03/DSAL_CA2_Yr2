@@ -12,7 +12,7 @@ namespace DSAL_CA2_Yr2
 {
     public partial class ChangeRoleOrOfficer : Form
     {
-        public delegate void ChangeRoleOrOfficerDelegate();
+        public delegate void ChangeRoleOrOfficerDelegate(string id, string name, string salary,string role, string reportingOfficer, bool dummy, bool sa);
         public ChangeRoleOrOfficerDelegate ChangeCallbackFn;
         private General general = new General();
         RoleTreeNode role;
@@ -58,7 +58,23 @@ namespace DSAL_CA2_Yr2
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
+            string id = tbId.Text;
+            string name = tbName.Text;
+            string salary = tbSalary.Text;
+            string reportingOfficer = comboReportingOfficer.Text;
+            string role = comboRole.Text;
+            bool dummy = cbDummyData.Checked;
+            bool sa = cbSalaryAccountable.Checked;
 
+            if(reportingOfficer != null && role != null)
+            {
+                ChangeCallbackFn(id, name, salary, role, reportingOfficer, dummy, sa);
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                MessageBox.Show("Select value from list");
+            }
         }// end of btnAdd_Click
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -86,5 +102,19 @@ namespace DSAL_CA2_Yr2
             else
                 comboReportingOfficer.Items.Add("No employee to be selected");
         }// end of comboRole_SelectedIndexChanged
+
+        private void cbDummyData_CheckedChanged(object sender, EventArgs e)
+        {
+            if (cbDummyData.Checked)
+            {
+                cbSalaryAccountable.Enabled = true;
+                tbName.Text = "Dummy";
+            }
+            else
+            {
+                cbSalaryAccountable.Checked = true;
+                cbSalaryAccountable.Enabled = false;
+            }
+        }// end of cbDummyData_CheckedChanged
     }
 }

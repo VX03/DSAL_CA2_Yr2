@@ -34,20 +34,20 @@
             this.label3 = new System.Windows.Forms.Label();
             this.treeViewEmployee = new System.Windows.Forms.TreeView();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.UUID = new System.Windows.Forms.Label();
-            this.tbId = new System.Windows.Forms.TextBox();
-            this.tbReportingOfficer = new System.Windows.Forms.TextBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbName = new System.Windows.Forms.TextBox();
-            this.label6 = new System.Windows.Forms.Label();
-            this.tbSalary = new System.Windows.Forms.TextBox();
-            this.label7 = new System.Windows.Forms.Label();
-            this.tbRole = new System.Windows.Forms.TextBox();
-            this.label8 = new System.Windows.Forms.Label();
+            this.btnSwap = new System.Windows.Forms.Button();
             this.tbProject = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.btnSwap = new System.Windows.Forms.Button();
+            this.tbRole = new System.Windows.Forms.TextBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.tbSalary = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.tbName = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.tbReportingOfficer = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.tbId = new System.Windows.Forms.TextBox();
+            this.UUID = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,110 +116,17 @@
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             // 
-            // label4
+            // btnSwap
             // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label4.Location = new System.Drawing.Point(155, 38);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(116, 23);
-            this.label4.TabIndex = 1;
-            this.label4.Text = "Replace With";
-            // 
-            // UUID
-            // 
-            this.UUID.AutoSize = true;
-            this.UUID.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.UUID.Location = new System.Drawing.Point(44, 98);
-            this.UUID.Name = "UUID";
-            this.UUID.Size = new System.Drawing.Size(52, 23);
-            this.UUID.TabIndex = 2;
-            this.UUID.Text = "UUID";
-            // 
-            // tbId
-            // 
-            this.tbId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbId.Enabled = false;
-            this.tbId.Location = new System.Drawing.Point(199, 97);
-            this.tbId.Name = "tbId";
-            this.tbId.Size = new System.Drawing.Size(193, 27);
-            this.tbId.TabIndex = 3;
-            // 
-            // tbReportingOfficer
-            // 
-            this.tbReportingOfficer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbReportingOfficer.Enabled = false;
-            this.tbReportingOfficer.Location = new System.Drawing.Point(199, 146);
-            this.tbReportingOfficer.Name = "tbReportingOfficer";
-            this.tbReportingOfficer.Size = new System.Drawing.Size(193, 27);
-            this.tbReportingOfficer.TabIndex = 5;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label5.Location = new System.Drawing.Point(44, 147);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(152, 23);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "Reporting Officer";
-            // 
-            // tbName
-            // 
-            this.tbName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbName.Enabled = false;
-            this.tbName.Location = new System.Drawing.Point(199, 190);
-            this.tbName.Name = "tbName";
-            this.tbName.Size = new System.Drawing.Size(193, 27);
-            this.tbName.TabIndex = 7;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label6.Location = new System.Drawing.Point(44, 191);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(57, 23);
-            this.label6.TabIndex = 6;
-            this.label6.Text = "Name";
-            // 
-            // tbSalary
-            // 
-            this.tbSalary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbSalary.Enabled = false;
-            this.tbSalary.Location = new System.Drawing.Point(199, 234);
-            this.tbSalary.Name = "tbSalary";
-            this.tbSalary.Size = new System.Drawing.Size(193, 27);
-            this.tbSalary.TabIndex = 9;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label7.Location = new System.Drawing.Point(44, 235);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(97, 23);
-            this.label7.TabIndex = 8;
-            this.label7.Text = "Salary ($$)";
-            // 
-            // tbRole
-            // 
-            this.tbRole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.tbRole.Enabled = false;
-            this.tbRole.Location = new System.Drawing.Point(199, 279);
-            this.tbRole.Name = "tbRole";
-            this.tbRole.Size = new System.Drawing.Size(193, 27);
-            this.tbRole.TabIndex = 11;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label8.Location = new System.Drawing.Point(44, 280);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(45, 23);
-            this.label8.TabIndex = 10;
-            this.label8.Text = "Role";
+            this.btnSwap.BackColor = System.Drawing.SystemColors.Desktop;
+            this.btnSwap.ForeColor = System.Drawing.SystemColors.ControlLightLight;
+            this.btnSwap.Location = new System.Drawing.Point(138, 372);
+            this.btnSwap.Name = "btnSwap";
+            this.btnSwap.Size = new System.Drawing.Size(156, 29);
+            this.btnSwap.TabIndex = 14;
+            this.btnSwap.Text = "Swap";
+            this.btnSwap.UseVisualStyleBackColor = false;
+            this.btnSwap.Click += new System.EventHandler(this.btnSwap_Click);
             // 
             // tbProject
             // 
@@ -240,16 +147,110 @@
             this.label9.TabIndex = 12;
             this.label9.Text = "Projects";
             // 
-            // btnSwap
+            // tbRole
             // 
-            this.btnSwap.BackColor = System.Drawing.SystemColors.Desktop;
-            this.btnSwap.ForeColor = System.Drawing.SystemColors.ControlLightLight;
-            this.btnSwap.Location = new System.Drawing.Point(138, 372);
-            this.btnSwap.Name = "btnSwap";
-            this.btnSwap.Size = new System.Drawing.Size(156, 29);
-            this.btnSwap.TabIndex = 14;
-            this.btnSwap.Text = "Swap";
-            this.btnSwap.UseVisualStyleBackColor = false;
+            this.tbRole.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbRole.Enabled = false;
+            this.tbRole.Location = new System.Drawing.Point(199, 279);
+            this.tbRole.Name = "tbRole";
+            this.tbRole.Size = new System.Drawing.Size(193, 27);
+            this.tbRole.TabIndex = 11;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label8.Location = new System.Drawing.Point(44, 280);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(45, 23);
+            this.label8.TabIndex = 10;
+            this.label8.Text = "Role";
+            // 
+            // tbSalary
+            // 
+            this.tbSalary.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbSalary.Enabled = false;
+            this.tbSalary.Location = new System.Drawing.Point(199, 234);
+            this.tbSalary.Name = "tbSalary";
+            this.tbSalary.Size = new System.Drawing.Size(193, 27);
+            this.tbSalary.TabIndex = 9;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label7.Location = new System.Drawing.Point(44, 235);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(97, 23);
+            this.label7.TabIndex = 8;
+            this.label7.Text = "Salary ($$)";
+            // 
+            // tbName
+            // 
+            this.tbName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbName.Enabled = false;
+            this.tbName.Location = new System.Drawing.Point(199, 190);
+            this.tbName.Name = "tbName";
+            this.tbName.Size = new System.Drawing.Size(193, 27);
+            this.tbName.TabIndex = 7;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label6.Location = new System.Drawing.Point(44, 191);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(57, 23);
+            this.label6.TabIndex = 6;
+            this.label6.Text = "Name";
+            // 
+            // tbReportingOfficer
+            // 
+            this.tbReportingOfficer.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbReportingOfficer.Enabled = false;
+            this.tbReportingOfficer.Location = new System.Drawing.Point(199, 146);
+            this.tbReportingOfficer.Name = "tbReportingOfficer";
+            this.tbReportingOfficer.Size = new System.Drawing.Size(193, 27);
+            this.tbReportingOfficer.TabIndex = 5;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label5.Location = new System.Drawing.Point(44, 147);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(152, 23);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "Reporting Officer";
+            // 
+            // tbId
+            // 
+            this.tbId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbId.Enabled = false;
+            this.tbId.Location = new System.Drawing.Point(199, 97);
+            this.tbId.Name = "tbId";
+            this.tbId.Size = new System.Drawing.Size(193, 27);
+            this.tbId.TabIndex = 3;
+            // 
+            // UUID
+            // 
+            this.UUID.AutoSize = true;
+            this.UUID.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.UUID.Location = new System.Drawing.Point(44, 98);
+            this.UUID.Name = "UUID";
+            this.UUID.Size = new System.Drawing.Size(52, 23);
+            this.UUID.TabIndex = 2;
+            this.UUID.Text = "UUID";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Segoe UI", 10.2F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.label4.Location = new System.Drawing.Point(155, 38);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(116, 23);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Replace With";
             // 
             // ReplaceEmployeeForm
             // 

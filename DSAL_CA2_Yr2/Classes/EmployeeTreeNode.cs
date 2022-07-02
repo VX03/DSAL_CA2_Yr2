@@ -41,6 +41,11 @@ namespace DSAL_CA2_Yr2.Classes
         // Funtions -------------------------------------------------------------------------------------------------------
         public void getEmployeeById(string employeeId, ref EmployeeTreeNode employee)
         {
+            if (this.Employee.EmployeeId.Equals(employeeId))
+            {
+                employee = this;
+                return;
+            }
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
             {
                 if (this.SubordinateEmployee[i].Employee.EmployeeId.Equals(employeeId))
@@ -108,6 +113,24 @@ namespace DSAL_CA2_Yr2.Classes
             }
             return employeeList;
         }// end of getAllReportingOfficer
+        public void getReportingOfficerTreeNode(string role,string name, ref EmployeeTreeNode employee)
+        {
+            if(this.Employee.Role.RoleId.Equals(role) && this.Employee.EmployeeName.Equals(name))
+            {
+                employee = this;
+            }
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.Role.RoleId.Equals(role) && this.SubordinateEmployee[i].Employee.EmployeeName.Equals(name))
+                {
+                    employee = this.SubordinateEmployee[i];
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getReportingOfficerTreeNode(role, name, ref employee);
+                }
+            }
+        }// end of getReportingOfficerTreeNode
         public void setEmployeeTreeNodeText(string employeeId)
         {
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
@@ -115,11 +138,16 @@ namespace DSAL_CA2_Yr2.Classes
             getSameEmployeeRolesById(employeeId, ref employeeList);
             if(employeeList.Count > 1)
             {
+
                 string text = "";
+                if(employeeList.Count != 0)
+                {
+                    text = employeeList[0].Employee.EmployeeName;
+                }
                 foreach(EmployeeTreeNode employeeTreeNode in employeeList)
                 {
-                    if(text == "")
-                        text += employeeTreeNode.Employee.Role.RoleName;
+                    if(text.Equals(employeeTreeNode.Employee.EmployeeName))
+                        text += " - "+employeeTreeNode.Employee.Role.RoleName;
                     else
                         text += " ," + employeeTreeNode.Employee.Role.RoleName;
                 }
@@ -129,7 +157,15 @@ namespace DSAL_CA2_Yr2.Classes
                     employeeTreeNode.Text = text +" (S$"+employeeTreeNode.Employee.Salary+")";
                 }
             }
+            else if(employeeList.Count == 1)
+            {
+                employeeList[0].Text = employeeList[0].Employee.EmployeeName + " - "+ employeeList[0].Employee.Role.RoleName + " (S$" + employeeList[0].Employee.Salary + ")";
+            }
         }// end of setEmployeeTreeNodeText
+        public void setEmployeeTreeNodeText()
+        {
+            this.Text = this.Employee.EmployeeName + " - " + this.Employee.Role.RoleName + " (S$" + this.Employee.Salary + ")";
+        }
         public void AddEmployeeSubordinate(EmployeeTreeNode employeeNode)
         {
             employeeNode.TopEmployee = this;
@@ -161,6 +197,31 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }//end of Remove Employee
+        public void RemoveEmployeeByIdAndRoleId(string employeeId, string roleId)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.EmployeeId.Equals(employeeId) && this.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleId))
+                {
+                    this.Nodes.Remove(this.SubordinateEmployee[i]);
+                    this.SubordinateEmployee.Remove(this.SubordinateEmployee[i]);
+                    return;
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].RemoveEmployeeByIdAndRoleId(employeeId, roleId);
+                }
+            }
+        }//end of Remove Employee
+        public override object Clone()
+        {
+            EmployeeTreeNode clone = (EmployeeTreeNode)base.Clone();
+            clone.Employee = this.Employee;
+            clone.TopEmployee = this.TopEmployee;
+            clone.SubordinateEmployee = this.SubordinateEmployee;
+
+            return clone;
+        }// end of Clone
 
         // End of Functions -----------------------------------------------------------------------------------------------
 
