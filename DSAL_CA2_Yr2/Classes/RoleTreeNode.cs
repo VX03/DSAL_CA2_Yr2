@@ -212,6 +212,7 @@ namespace DSAL_CA2_Yr2.Classes
             info.AddValue("TopRole", _topRole);
 
         }//end of GetObjectData [ SERIALIZE ]
+
         // [DESERIALIZE]
         protected RoleTreeNode(SerializationInfo info, StreamingContext context)
         {

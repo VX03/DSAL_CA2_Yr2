@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Forms;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
 
 namespace DSAL_CA2_Yr2.Classes
 {
+    [Serializable]
     public class EmployeeTreeNode : TreeNode, ISerializable
     {
         private Employee _employee;
@@ -39,6 +43,18 @@ namespace DSAL_CA2_Yr2.Classes
             set { _subordinateEmployee = value; }
         }
         // Funtions -------------------------------------------------------------------------------------------------------
+        public void getAllEmployee(ref List<EmployeeTreeNode> employeeList)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                employeeList.Add(this.SubordinateEmployee[i]);   
+                
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getAllEmployee(ref employeeList);
+                }
+            }
+        }// end of getAllEmployee
         public void getEmployeeById(string employeeId, ref EmployeeTreeNode employee)
         {
             if (this.Employee.EmployeeId.Equals(employeeId))
@@ -131,6 +147,51 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }// end of getReportingOfficerTreeNode
+        public void setAllEmployeeTreeNodeText()
+        {
+            
+            List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
+            employeeList.Add(this);
+
+            this.getAllEmployee(ref employeeList);
+
+            foreach (EmployeeTreeNode employeeTreeNode in employeeList)
+            {
+                List <EmployeeTreeNode> list = new List <EmployeeTreeNode>();
+                for(int i = 0; i < employeeList.Count; i++)
+                {
+                    if (employeeList[i].Employee.EmployeeId.Equals(employeeTreeNode.Employee.EmployeeId)){
+                        list.Add(employeeList[i]);
+                    }
+                }
+                if (list.Count > 1)
+                {
+                    string text = "";
+                    if (list.Count != 0)
+                    {
+                        text = list[0].Employee.EmployeeName;
+                    }
+
+                    // get all the roles
+                    foreach (EmployeeTreeNode employeeTreeNode2 in list)
+                    {
+                        if (text.Equals(employeeTreeNode2.Employee.EmployeeName))
+                            text += " - " + employeeTreeNode2.Employee.Role.RoleName;
+                        else
+                            text += ", " + employeeTreeNode2.Employee.Role.RoleName;
+                    }
+                    //get salary
+                    employeeTreeNode.Text = text + " (S$" + employeeTreeNode.Employee.Salary + ")";
+                    
+                }
+                // if text is not set and 
+                else if(list[0].Text.Equals("") || list[0].Text == null)
+                {
+                    list[0].setEmployeeTreeNodeText();
+                }
+            }// end of foreach
+
+        }// end of setAllEmployeeTreeNodeText
         public void setEmployeeTreeNodeText(string employeeId)
         {
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
@@ -152,7 +213,7 @@ namespace DSAL_CA2_Yr2.Classes
                     if(text.Equals(employeeTreeNode.Employee.EmployeeName))
                         text += " - "+employeeTreeNode.Employee.Role.RoleName;
                     else
-                        text += " ," + employeeTreeNode.Employee.Role.RoleName;
+                        text += ", " + employeeTreeNode.Employee.Role.RoleName;
                 }
 
                 foreach(EmployeeTreeNode employeeTreeNode in employeeList)
@@ -162,7 +223,7 @@ namespace DSAL_CA2_Yr2.Classes
             }
             else if(employeeList.Count == 1)
             {
-                employeeList[0].Text = employeeList[0].Employee.EmployeeName + " - "+ employeeList[0].Employee.Role.RoleName + " (S$" + employeeList[0].Employee.Salary + ")";
+                employeeList[0].setEmployeeTreeNodeText();
             }
         }// end of setEmployeeTreeNodeText
         public void setEmployeeTreeNodeText()
@@ -224,11 +285,93 @@ namespace DSAL_CA2_Yr2.Classes
             clone.SubordinateEmployee = this.SubordinateEmployee;
 
             return clone;
-        }// end of Clone
+        }// end of overriding Clone
+        public void RebuildTreeNodes()
+        {
+            this.setAllEmployeeTreeNodeText();
+            if (this.SubordinateEmployee.Count > 0)
+            {
+                for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+                {
+                    this.Nodes.Add(this.SubordinateEmployee[i]);
+                    this.SubordinateEmployee[i].TopEmployee = this;
+                    this.SubordinateEmployee[i].RebuildTreeNodes();
+                }
+            }
+        }//End of RebuildTreeNodes
 
         // End of Functions -----------------------------------------------------------------------------------------------
 
         // File IO Functions ----------------------------------------------------------------------------------------------
+
+        public void SaveToFileBinary()
+        {
+            try
+            {
+                string filepath = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\EmployeeTreeNode.dat";
+                BinaryFormatter bf = new BinaryFormatter();
+                Stream stream = new FileStream(filepath, FileMode.OpenOrCreate, FileAccess.Write);
+
+                bf.Serialize(stream, this);
+                stream.Close();
+
+                MessageBox.Show("Data is added to file");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        } //End of SaveToFileBinary
+        public EmployeeTreeNode LoadFromFileBinary()
+        {
+            try
+            {
+                string filepath = System.IO.Path.GetDirectoryName(Application.ExecutablePath) + "\\EmployeeTreeNode.dat";
+                Stream stream = new FileStream(@filepath, FileMode.OpenOrCreate, FileAccess.Read);
+                BinaryFormatter bf = new BinaryFormatter();
+                EmployeeTreeNode root = null;
+                if (stream.Length != 0)
+                {
+                    root = (EmployeeTreeNode)bf.Deserialize(stream);
+                }
+                stream.Close();
+
+                return root;
+            }
+            catch (FileNotFoundException ex)
+            {
+                MessageBox.Show("Unable to find file.");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+                return null;
+            }
+
+        }//end of ReadFromFileBinary
+
+        // [ SERIALIZE ]
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            //add the required data to file
+            info.AddValue("Employee", _employee);
+            info.AddValue("SubordinateEmployee", _subordinateEmployee);
+            info.AddValue("TopEmployee", _topEmployee);
+
+        }//end of GetObjectData [ SERIALIZE ]
+
+        // [DESERIALIZE]
+        protected EmployeeTreeNode(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new System.ArgumentNullException("info");
+
+            this.Employee = (Employee)info.GetValue("Employee", typeof(Employee));
+            this.TopEmployee = (EmployeeTreeNode)info.GetValue("TopEmployee", typeof(EmployeeTreeNode));
+            this.SubordinateEmployee = (List<EmployeeTreeNode>)info.GetValue("SubordinateEmployee", typeof(List<EmployeeTreeNode>));
+
+        }//end of EmployeeTreeNode [ DESERIALIZE ]
 
         // End Of File IO Functions ---------------------------------------------------------------------------------------
     }

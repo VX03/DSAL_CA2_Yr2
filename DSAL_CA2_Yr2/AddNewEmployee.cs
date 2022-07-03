@@ -38,6 +38,7 @@ namespace DSAL_CA2_Yr2
                 bool accountable = cbSalaryAccountable.Checked;
                 double salary = Double.Parse(tbSalary.Text);
                 Role role = null;
+
                 foreach (RoleTreeNode roleTreeNode in subordinateRoles)
                 {
                     if (roleTreeNode.Role.RoleName.Equals(comboRole.Text))
@@ -48,7 +49,7 @@ namespace DSAL_CA2_Yr2
 
                 if (checkname && role != null && salary > 0)
                 {
-                    AddEmployeeCallbackFn(name, salary, dummy, accountable, role);
+                    AddEmployeeCallbackFn(name.Trim(), salary, dummy, accountable, role);
                     this.DialogResult = DialogResult.OK;
                 }
                 // errors
@@ -58,7 +59,10 @@ namespace DSAL_CA2_Yr2
                 }
                 else if(!checkname) //name
                 {
-                    MessageBox.Show("Name contains special character(s) or number(s)");
+                    if (name.Trim().Length > 0)
+                        MessageBox.Show("Name contains special character(s) or number(s)");
+                    else
+                        MessageBox.Show("Please input the employee name");
                 }
                 else //selected value
                 {

@@ -24,22 +24,30 @@ namespace DSAL_CA2_Yr2
         private void ManageEmployee_Load(object sender, EventArgs e)
         {
             treeViewEmployee.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewEmployee_NodeMouseClick);
-            // [ Get data from file ]
-            //testing with  generated roles
+            
+            // [ Get data from role file ]
+            
             _role = _role.LoadFromFileBinary();
-
             if (_role == null)
             {
                 _role = general.AutomaticGenerateRole();
-                MessageBox.Show("There is no Data in file. Data is automatically created and saved to file");
+                MessageBox.Show("There is no role data in file. Role data is automatically created and saved to file");
                 _role.SaveToFileBinary();
 
             }//Automatically Create roles
-
-            EmployeeTreeNode root = new EmployeeTreeNode(new Employee("root", 0, _role.Role, false, false));
-            _root = root;
-
-            treeViewEmployee.Nodes.Add(root);
+            
+            // [ Get data from employee file ]
+            _root = _root.LoadFromFileBinary();
+            if (_root == null)
+            {
+                EmployeeTreeNode root = new EmployeeTreeNode(new Employee("root", 0, _role.Role, false, false));
+                _root = root;
+            }
+            else
+                _root.RebuildTreeNodes();
+            
+            treeViewEmployee.Nodes.Add(_root);
+            treeViewEmployee.ExpandAll();
         }// End of ManageEmployee_Load
 
         // Create Context Menu on Right Click ------------------------------------------------------------------------------------------------
@@ -69,9 +77,6 @@ namespace DSAL_CA2_Yr2
                 }
                 else
                     officername = "N.A";
-
-                
-
                     
                 tbId.Text = id;
                 tbReportingOfficer.Text = officername;
@@ -459,5 +464,40 @@ namespace DSAL_CA2_Yr2
         }// end of btnCollapseAll_Click
 
         // End Of Collapse and Expand TreeView -----------------------------------------------------------------------------------------------
+
+        // Save and Load (File IO) -----------------------------------------------------------------------------------------------------------
+        
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            _root.SaveToFileBinary();
+        }// end of btnSave_Click
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            EmployeeTreeNode root;
+            // Load from binary
+            root = _root.LoadFromFileBinary();
+
+            if(root == null)
+            {   
+                MessageBox.Show("There is no data in file");
+            }
+            else
+            {
+                treeViewEmployee.Nodes.Clear();
+                _root = root;
+                _root.RebuildTreeNodes();
+                treeViewEmployee.Nodes.Add(_root);
+                treeViewEmployee.ExpandAll();
+            }
+
+        }// end of btnLoad_Click
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        // End of Save and Load (File IO) ----------------------------------------------------------------------------------------------
+
     }
 }
