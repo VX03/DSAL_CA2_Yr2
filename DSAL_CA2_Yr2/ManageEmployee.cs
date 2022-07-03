@@ -26,7 +26,15 @@ namespace DSAL_CA2_Yr2
             treeViewEmployee.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewEmployee_NodeMouseClick);
             // [ Get data from file ]
             //testing with  generated roles
-            _role = general.AutomaticGenerateRole();
+            _role = _role.LoadFromFileBinary();
+
+            if (_role == null)
+            {
+                _role = general.AutomaticGenerateRole();
+                MessageBox.Show("There is no Data in file. Data is automatically created and saved to file");
+                _role.SaveToFileBinary();
+
+            }//Automatically Create roles
 
             EmployeeTreeNode root = new EmployeeTreeNode(new Employee("root", 0, _role.Role, false, false));
             _root = root;
@@ -235,19 +243,31 @@ namespace DSAL_CA2_Yr2
             }
             else
             {
-                string employeeName = _currentSelectedEmployee.Employee.EmployeeName;
-                tbConsole.Text = employeeName + " has been selected to be change.";
+                List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
+                _root.getSameEmployeeRolesById(_currentSelectedEmployee.Employee.EmployeeId, ref employeeList);
 
-                ChangeRoleOrOfficer changeForm = new ChangeRoleOrOfficer(
-                    _currentSelectedEmployee.Employee.EmployeeId,
-                    _currentSelectedEmployee.Employee.Role.RoleName,
-                    _currentSelectedEmployee.Employee.EmployeeName,
-                    _currentSelectedEmployee.Employee.Salary,
-                    _currentSelectedEmployee.TopEmployee.Employee.Role.RoleName,
-                    _currentSelectedEmployee.TopEmployee.Employee.EmployeeName,
-                    _root);
-                changeForm.ChangeCallbackFn = ChangeCallbackFn;
-                changeForm.ShowDialog();
+                if (employeeList.Count > 0 && employeeList.Count < 2)
+                {
+                    string employeeName = _currentSelectedEmployee.Employee.EmployeeName;
+                    tbConsole.Text = employeeName + " has been selected to be change.";
+
+                    ChangeRoleOrOfficer changeForm = new ChangeRoleOrOfficer(
+                        _currentSelectedEmployee.Employee.EmployeeId, // id
+                        _currentSelectedEmployee.Employee.Role.RoleName, // role
+                        _currentSelectedEmployee.Employee.EmployeeName, // name
+                        _currentSelectedEmployee.Employee.Salary, // salary
+                        _currentSelectedEmployee.TopEmployee.Employee.Role.RoleName, // reporting officer role
+                        _currentSelectedEmployee.TopEmployee.Employee.EmployeeName, // reporting officer name
+                        _root,
+                        _role
+                        );
+                    changeForm.ChangeCallbackFn = ChangeCallbackFn;
+                    changeForm.ShowDialog();
+                }
+                else
+                {
+                    MessageBox.Show("Unable to add more than 2 roles for each employee");
+                }
             }
         }// end of MenuItemChange_Click
         private void ChangeCallbackFn(string id, string name, string salary, string role, string reportingOfficer, bool dummy, bool sa) 
@@ -268,6 +288,7 @@ namespace DSAL_CA2_Yr2
 
                 //Add subordinate
                 officerNode.AddEmployeeSubordinate(treeNode);
+                officerNode.Expand();
 
                 //Set Text
                 _root.setEmployeeTreeNodeText(id);
@@ -280,7 +301,7 @@ namespace DSAL_CA2_Yr2
             }
         }// end of ChangeCallbackFn
 
-        // Swaping Employee [ DONE?? NEED CHECKING ]
+        // Swaping Employee [ DONE ]
         private void MenuItemSwapEmployee_Click(object sender, EventArgs e) 
         {
             _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
@@ -328,19 +349,21 @@ namespace DSAL_CA2_Yr2
             _currentSelectedEmployee.Employee.SalaryAccountable = sa;
 
             // set treeview text
-            employee.setEmployeeTreeNodeText();
-            _currentSelectedEmployee.setEmployeeTreeNodeText();
+            _root.setEmployeeTreeNodeText(employee.Employee.EmployeeId);
+            _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
 
             tbConsole.Text = employee.Employee.EmployeeName + " has been swapped with " + _currentSelectedEmployee.Employee.EmployeeName;
         }//end of SwapEmployeeCallbackFn
 
-        // Remove Employee [ NOT DONE / NEED CHANGING ]
+        // Remove Employee [ NOT DONE / NEED CHANGING? ]
         private void MenuItemRemoveEmployee_Click(object sender, EventArgs e)
         {
             _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
+
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
             _root.getSameEmployeeRolesById(_currentSelectedEmployee.Employee.EmployeeId, ref employeeList);
 
+            // there is multiple employee
             if (employeeList.Count > 1)
             {
                 // There is no subordinate and project
@@ -349,16 +372,38 @@ namespace DSAL_CA2_Yr2
                     _currentSelectedEmployee.Employee.Project == null
                   )
                 {
-                    _root.RemoveEmployeeByIdAndRoleId(_currentSelectedEmployee.Employee.EmployeeId, _currentSelectedEmployee.Employee.Role.RoleId);
-                    _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
+                    DialogResult dialogResult = MessageBox.Show("Confirm removal of employee? Click OK to proceed", "Confirm Deletion", MessageBoxButtons.YesNo);
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        _root.RemoveEmployeeByIdAndRoleId(_currentSelectedEmployee.Employee.EmployeeId, _currentSelectedEmployee.Employee.Role.RoleId);
+                        _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
+                    }
+                    
                 }
 
                 else
                 {
-                    string text = "Have subordinate or project";
-                    MessageBox.Show(text);
+                    string text = "The employee can only be removed if there are no subordinates, no assigned projects or if after removal will still remain a full team. Would you like to swap the employee with another first?";
+                    DialogResult dialogResult = MessageBox.Show(text, "Swap Employee", MessageBoxButtons.YesNo);
+
+                    // [ DO SWAPING HERE ]
+                    if (dialogResult == DialogResult.Yes)
+                    {
+                        // Clone treeNode
+                        EmployeeTreeNode root = (EmployeeTreeNode)_root.Clone();
+
+
+                        ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
+                            (EmployeeTreeNode)root,
+                            _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName
+                            );
+                        swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
+                        swapForm.ShowDialog();
+                    }
                 }
             }
+
+            //there is only 1 employee
             else
             {
                 // if proj change to class, condition put as [ _currentSelectedEmployee.Employee.Project.Count == 0 ]
@@ -377,7 +422,7 @@ namespace DSAL_CA2_Yr2
                     }
                 }
                 // if proj change to class, condition put as [ _currentSelectedEmployee.Employee.Project.Count != 0 ]
-                else if (_currentSelectedEmployee.SubordinateEmployee.Count != 0 || _currentSelectedEmployee.Employee.Project != null)
+                else 
                 {
                     string text = "The employee can only be removed if there are no subordinates, no assigned projects or if after removal will still remain a full team. Would you like to swap the employee with another first?";
                     DialogResult dialogResult = MessageBox.Show(text, "Swap Employee", MessageBoxButtons.YesNo);
@@ -385,8 +430,16 @@ namespace DSAL_CA2_Yr2
                     // [ DO SWAPING HERE ]
                     if (dialogResult == DialogResult.Yes)
                     {
+                        // Clone treeNode
+                        EmployeeTreeNode root = (EmployeeTreeNode)_root.Clone();
 
-                        MessageBox.Show("Swap here");
+
+                        ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
+                            (EmployeeTreeNode)root,
+                            _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName
+                            );
+                        swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
+                        swapForm.ShowDialog();
                     }
                 }
             }

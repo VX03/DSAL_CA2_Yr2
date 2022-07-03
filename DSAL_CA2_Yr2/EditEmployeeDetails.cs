@@ -40,7 +40,7 @@ namespace DSAL_CA2_Yr2
                 bool checkname = general.checkAlphabetAndSpace(name);
                 bool dummy = cbDummyData.Checked;
                 bool accountable = cbSalaryAccountable.Checked;
-                double salary = Double.Parse(tbSalary.Text);
+                double salary = Double.Parse(String.Format("{0:0.00}", tbSalary.Text));
 
 
                 if (checkname && salary > 0)

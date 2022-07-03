@@ -23,6 +23,8 @@ namespace DSAL_CA2_Yr2
             treeViewEmployee.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewEmployee_NodeMouseClick);
             treeViewEmployee.Nodes.Add(_root);
 
+            treeViewEmployee.ExpandAll();
+
             tbEmployee.Text = employee;
         }
 

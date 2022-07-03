@@ -18,10 +18,13 @@ namespace DSAL_CA2_Yr2
         RoleTreeNode role;
         EmployeeTreeNode root;
         List<string> topEmployee = new List<string>();
-        public ChangeRoleOrOfficer(string id,string roleN,string name,double salary,string topemployeeRole,string topEmployeeName, EmployeeTreeNode _root)
+        public ChangeRoleOrOfficer(string id,string roleN,string name,double salary,string topemployeeRole,string topEmployeeName, EmployeeTreeNode _root, RoleTreeNode _role)
         {
             InitializeComponent();
-            role = general.AutomaticGenerateRole();
+            if (_role == null)
+                role = general.AutomaticGenerateRole();
+            else
+                role = _role;
 
             List<string> allRoles = new List<string>();
  
@@ -66,14 +69,17 @@ namespace DSAL_CA2_Yr2
             bool dummy = cbDummyData.Checked;
             bool sa = cbSalaryAccountable.Checked;
 
-            if(reportingOfficer != null && role != null)
+            if(reportingOfficer != null && role != null && !role.Equals("No employee to be selected"))
             {
                 ChangeCallbackFn(id, name, salary, role, reportingOfficer, dummy, sa);
                 this.DialogResult = DialogResult.OK;
             }
             else
             {
-                MessageBox.Show("Select value from list");
+                if (role.Equals("No employee to be selected"))
+                    MessageBox.Show("Do not select a role that have no employee");
+                else
+                    MessageBox.Show("Select value from reporting officer / role list");
             }
         }// end of btnAdd_Click
 

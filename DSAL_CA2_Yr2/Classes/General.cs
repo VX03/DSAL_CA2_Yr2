@@ -8,7 +8,7 @@ namespace DSAL_CA2_Yr2.Classes
     {
         public bool checkAlphabetAndSpace(string s)
         {
-            if (s == null)
+            if (s == null || s.Equals("") )//add trim
                 return false;
 
             for (int i = 0; i < s.Length; i++)

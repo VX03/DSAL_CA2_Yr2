@@ -134,7 +134,10 @@ namespace DSAL_CA2_Yr2.Classes
         public void setEmployeeTreeNodeText(string employeeId)
         {
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
-            
+            if (this.Employee.EmployeeId.Equals(employeeId))
+            {
+                employeeList.Add(this);
+            }
             getSameEmployeeRolesById(employeeId, ref employeeList);
             if(employeeList.Count > 1)
             {
