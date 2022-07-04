@@ -14,6 +14,7 @@ namespace DSAL_CA2_Yr2
 {
     public partial class ManageRoles : Form
     {
+        private EmployeeTreeNode _employee = new EmployeeTreeNode();
         private RoleTreeNode _root = new RoleTreeNode();
         private RoleTreeNode _currentSelectedRole;
         private General general = new General();
@@ -28,6 +29,7 @@ namespace DSAL_CA2_Yr2
             treeViewRole.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewRole_NodeMouseClick);
 
             _root = _root.LoadFromFileBinary();
+            _employee = _employee.LoadFromFileBinary();
 
             if (_root == null)
             {
@@ -154,10 +156,29 @@ namespace DSAL_CA2_Yr2
         //Remove Role [ DONE ]
         private void MenuItemRemoveRole_Click(object sender, EventArgs e)
         {
+
             _currentSelectedRole = (RoleTreeNode)treeViewRole.SelectedNode;
             string name = _currentSelectedRole.Role.RoleName;
-            _root.RemoveRole(_currentSelectedRole.Role.RoleId);
-            tbConsole.Text = name+" has been removed";
+
+            if (_employee == null)
+            {    
+                _root.RemoveRole(_currentSelectedRole.Role.RoleId);
+                tbConsole.Text = name + " has been removed";
+            }
+            else
+            {
+                bool check = false;
+                _employee.checkHaveEmployeeForRole(_currentSelectedRole.Role.RoleId, ref check);
+                if (check)
+                {
+                    MessageBox.Show("Unable to delete " + name + " as there is employees under the role");
+                }
+                else
+                {
+                    _root.RemoveRole(_currentSelectedRole.Role.RoleId);
+                    tbConsole.Text = name + " has been removed";
+                }
+            }
         }// End of MenuItemRemoveRole_Click
 
         // End of Edit/update/remove Role in Context Menu -----------------------------------------------------------------------------

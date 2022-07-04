@@ -75,7 +75,7 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
 
-        }
+        }// end of getEmployeeById 
         public void getSameEmployeeRolesById(string employeeId, ref List<EmployeeTreeNode> employeeList)
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
@@ -147,6 +147,24 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }// end of getReportingOfficerTreeNode
+        public void checkHaveEmployeeForRole(string role, ref bool check)
+        {
+            if (this.Employee.Role.RoleId.Equals(role))
+            {
+                check = true;
+            }
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.Role.RoleId.Equals(role))
+                {
+                    check = true;
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].checkHaveEmployeeForRole(role, ref check);
+                }
+            }
+        }// end of checkHaveEmployeeForRole
         public void setAllEmployeeTreeNodeText()
         {
             
@@ -229,7 +247,7 @@ namespace DSAL_CA2_Yr2.Classes
         public void setEmployeeTreeNodeText()
         {
             this.Text = this.Employee.EmployeeName + " - " + this.Employee.Role.RoleName + " (S$" + this.Employee.Salary + ")";
-        }
+        }// end of setEmployeeTreeNodeText 
         public void AddEmployeeSubordinate(EmployeeTreeNode employeeNode)
         {
             employeeNode.TopEmployee = this;

@@ -494,8 +494,24 @@ namespace DSAL_CA2_Yr2
 
         private void btnReset_Click(object sender, EventArgs e)
         {
+            EmployeeTreeNode root;
+            // Load from binary
+            root = _root.LoadFromFileBinary();
 
-        }
+            if (root == null)
+            {
+                root = new EmployeeTreeNode(new Employee("root", 0, _role.Role, false, false));
+                _root = root;
+            }
+            else
+            {
+                treeViewEmployee.Nodes.Clear();
+                _root = root;
+                _root.RebuildTreeNodes();
+                treeViewEmployee.Nodes.Add(_root);
+                treeViewEmployee.ExpandAll();
+            }
+        }// end of btnReset_Click
 
         // End of Save and Load (File IO) ----------------------------------------------------------------------------------------------
 
