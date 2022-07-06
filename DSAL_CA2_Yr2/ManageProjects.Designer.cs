@@ -69,7 +69,7 @@
             this.label13 = new System.Windows.Forms.Label();
             this.label17 = new System.Windows.Forms.Label();
             this.listviewProjectList = new System.Windows.Forms.ListView();
-            this.comboBox3 = new System.Windows.Forms.ComboBox();
+            this.comboBoxMode = new System.Windows.Forms.ComboBox();
             this.label18 = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -175,35 +175,42 @@
             // btnAddConfirm
             // 
             this.btnAddConfirm.BackColor = System.Drawing.Color.MistyRose;
+            this.btnAddConfirm.Enabled = false;
             this.btnAddConfirm.Location = new System.Drawing.Point(301, 377);
             this.btnAddConfirm.Name = "btnAddConfirm";
             this.btnAddConfirm.Size = new System.Drawing.Size(113, 29);
             this.btnAddConfirm.TabIndex = 15;
             this.btnAddConfirm.Text = "Confirm Add";
             this.btnAddConfirm.UseVisualStyleBackColor = false;
+            this.btnAddConfirm.Click += new System.EventHandler(this.btnAddConfirm_Click);
             // 
             // btnAddCancel
             // 
             this.btnAddCancel.BackColor = System.Drawing.Color.Red;
+            this.btnAddCancel.Enabled = false;
             this.btnAddCancel.Location = new System.Drawing.Point(171, 377);
             this.btnAddCancel.Name = "btnAddCancel";
             this.btnAddCancel.Size = new System.Drawing.Size(113, 29);
             this.btnAddCancel.TabIndex = 14;
             this.btnAddCancel.Text = "Cancel";
             this.btnAddCancel.UseVisualStyleBackColor = false;
+            this.btnAddCancel.Click += new System.EventHandler(this.btnAddCancel_Click);
             // 
             // btnAddSearchTeams
             // 
             this.btnAddSearchTeams.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnAddSearchTeams.Enabled = false;
             this.btnAddSearchTeams.Location = new System.Drawing.Point(18, 377);
             this.btnAddSearchTeams.Name = "btnAddSearchTeams";
             this.btnAddSearchTeams.Size = new System.Drawing.Size(134, 29);
             this.btnAddSearchTeams.TabIndex = 13;
             this.btnAddSearchTeams.Text = "Search For Teams";
             this.btnAddSearchTeams.UseVisualStyleBackColor = false;
+            this.btnAddSearchTeams.Click += new System.EventHandler(this.btnAddSearchTeams_Click);
             // 
             // comboAddTeamLeader
             // 
+            this.comboAddTeamLeader.Enabled = false;
             this.comboAddTeamLeader.FormattingEnabled = true;
             this.comboAddTeamLeader.Location = new System.Drawing.Point(204, 332);
             this.comboAddTeamLeader.Name = "comboAddTeamLeader";
@@ -213,6 +220,7 @@
             // tbAddProjectRevenue
             // 
             this.tbAddProjectRevenue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbAddProjectRevenue.Enabled = false;
             this.tbAddProjectRevenue.Location = new System.Drawing.Point(204, 293);
             this.tbAddProjectRevenue.Name = "tbAddProjectRevenue";
             this.tbAddProjectRevenue.Size = new System.Drawing.Size(210, 27);
@@ -221,6 +229,7 @@
             // tbAddProjectName
             // 
             this.tbAddProjectName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbAddProjectName.Enabled = false;
             this.tbAddProjectName.Location = new System.Drawing.Point(204, 251);
             this.tbAddProjectName.Name = "tbAddProjectName";
             this.tbAddProjectName.Size = new System.Drawing.Size(210, 27);
@@ -366,6 +375,7 @@
             // btnEditDelete
             // 
             this.btnEditDelete.BackColor = System.Drawing.Color.Red;
+            this.btnEditDelete.Enabled = false;
             this.btnEditDelete.Location = new System.Drawing.Point(296, 254);
             this.btnEditDelete.Name = "btnEditDelete";
             this.btnEditDelete.Size = new System.Drawing.Size(113, 29);
@@ -376,6 +386,7 @@
             // btnConfirmEdit
             // 
             this.btnConfirmEdit.BackColor = System.Drawing.Color.IndianRed;
+            this.btnConfirmEdit.Enabled = false;
             this.btnConfirmEdit.Location = new System.Drawing.Point(166, 254);
             this.btnConfirmEdit.Name = "btnConfirmEdit";
             this.btnConfirmEdit.Size = new System.Drawing.Size(113, 29);
@@ -386,6 +397,7 @@
             // btnEditSearchTeams
             // 
             this.btnEditSearchTeams.BackColor = System.Drawing.SystemColors.Highlight;
+            this.btnEditSearchTeams.Enabled = false;
             this.btnEditSearchTeams.Location = new System.Drawing.Point(13, 254);
             this.btnEditSearchTeams.Name = "btnEditSearchTeams";
             this.btnEditSearchTeams.Size = new System.Drawing.Size(134, 29);
@@ -395,6 +407,7 @@
             // 
             // comboEditTeamLeader
             // 
+            this.comboEditTeamLeader.Enabled = false;
             this.comboEditTeamLeader.FormattingEnabled = true;
             this.comboEditTeamLeader.Location = new System.Drawing.Point(180, 202);
             this.comboEditTeamLeader.Name = "comboEditTeamLeader";
@@ -502,18 +515,19 @@
             this.listviewProjectList.TabIndex = 33;
             this.listviewProjectList.UseCompatibleStateImageBehavior = false;
             // 
-            // comboBox3
+            // comboBoxMode
             // 
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {
+            this.comboBoxMode.FormattingEnabled = true;
+            this.comboBoxMode.Items.AddRange(new object[] {
             "View",
             "Add",
             "Edit"});
-            this.comboBox3.Location = new System.Drawing.Point(1598, 12);
-            this.comboBox3.Name = "comboBox3";
-            this.comboBox3.Size = new System.Drawing.Size(142, 28);
-            this.comboBox3.TabIndex = 35;
-            this.comboBox3.Text = "View";
+            this.comboBoxMode.Location = new System.Drawing.Point(1598, 12);
+            this.comboBoxMode.Name = "comboBoxMode";
+            this.comboBoxMode.Size = new System.Drawing.Size(142, 28);
+            this.comboBoxMode.TabIndex = 35;
+            this.comboBoxMode.Text = "View";
+            this.comboBoxMode.SelectedIndexChanged += new System.EventHandler(this.comboBoxMode_SelectedIndexChanged);
             // 
             // label18
             // 
@@ -530,7 +544,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1813, 890);
-            this.Controls.Add(this.comboBox3);
+            this.Controls.Add(this.comboBoxMode);
             this.Controls.Add(this.label18);
             this.Controls.Add(this.listviewProjectList);
             this.Controls.Add(this.label17);
@@ -547,6 +561,7 @@
             this.Controls.Add(this.btnReset);
             this.Name = "ManageProjects";
             this.Text = "ManageProjects";
+            this.Load += new System.EventHandler(this.ManageProjects_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.groupBox2.ResumeLayout(false);
@@ -599,7 +614,7 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label label17;
         private System.Windows.Forms.ListView listviewProjectList;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox comboBoxMode;
         private System.Windows.Forms.Label label18;
     }
 }

@@ -26,7 +26,6 @@ namespace DSAL_CA2_Yr2
             treeViewEmployee.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewEmployee_NodeMouseClick);
             
             // [ Get data from role file ]
-            
             _role = _role.LoadFromFileBinary();
             if (_role == null)
             {
@@ -59,6 +58,7 @@ namespace DSAL_CA2_Yr2
             {
                 string id = "", project = "", name = "", salary = "", role = "", officername = "";
 
+
                 id = _currentSelectedEmployee.Employee.EmployeeId;
                 
                 name = _currentSelectedEmployee.Employee.EmployeeName;
@@ -68,7 +68,7 @@ namespace DSAL_CA2_Yr2
                 {
                     if (_currentSelectedEmployee.Employee.Project != null)
                     {
-                        project = _currentSelectedEmployee.Employee.Project;
+                        project = _currentSelectedEmployee.Employee.Project.ProjectName;
                     }
                     else
                         project = "N.A.";
@@ -298,7 +298,7 @@ namespace DSAL_CA2_Yr2
                 //Set Text
                 _root.setEmployeeTreeNodeText(id);
 
-                tbConsole.Text = name + " has added " + role;
+                tbConsole.Text = name + " has added " + role +" role";
             }
             catch (Exception ex)
             {
@@ -326,7 +326,8 @@ namespace DSAL_CA2_Yr2
 
                 ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
                     (EmployeeTreeNode)root,
-                    _currentSelectedEmployee.Employee.EmployeeName+" - "+ _currentSelectedEmployee.Employee.Role.RoleName
+                    _currentSelectedEmployee.Employee.EmployeeName+" - "+ _currentSelectedEmployee.Employee.Role.RoleName,
+                    _currentSelectedEmployee.Employee.Role.RoleId
                     );
                 swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
                 swapForm.ShowDialog();
@@ -336,6 +337,7 @@ namespace DSAL_CA2_Yr2
         {
             string id  = _currentSelectedEmployee.Employee.EmployeeId;
             string name = _currentSelectedEmployee.Employee.EmployeeName;
+            double salary = _currentSelectedEmployee.Employee.Salary;
             bool dummy = _currentSelectedEmployee.Employee.DummyData;
             bool sa = _currentSelectedEmployee.Employee.SalaryAccountable;
 
@@ -347,12 +349,13 @@ namespace DSAL_CA2_Yr2
             _currentSelectedEmployee.Employee.EmployeeName = employee.Employee.EmployeeName;
             _currentSelectedEmployee.Employee.DummyData = employee.Employee.DummyData;
             _currentSelectedEmployee.Employee.SalaryAccountable = employee.Employee.SalaryAccountable;
+            _currentSelectedEmployee.Employee.Salary = employee.Employee.Salary;
 
             employee.Employee.EmployeeId = id;
             employee.Employee.EmployeeName = name;
             employee.Employee.DummyData = dummy;
-            _currentSelectedEmployee.Employee.SalaryAccountable = sa;
-
+            employee.Employee.SalaryAccountable = sa;
+            employee.Employee.Salary = salary;
             // set treeview text
             _root.setEmployeeTreeNodeText(employee.Employee.EmployeeId);
             _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
@@ -400,7 +403,8 @@ namespace DSAL_CA2_Yr2
 
                         ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
                             (EmployeeTreeNode)root,
-                            _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName
+                            _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName,
+                            _currentSelectedEmployee.Employee.Role.RoleId
                             );
                         swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
                         swapForm.ShowDialog();
@@ -441,7 +445,8 @@ namespace DSAL_CA2_Yr2
 
                         ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
                             (EmployeeTreeNode)root,
-                            _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName
+                            _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName,
+                            _currentSelectedEmployee.Employee.Role.RoleId
                             );
                         swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
                         swapForm.ShowDialog();
@@ -491,7 +496,6 @@ namespace DSAL_CA2_Yr2
             }
 
         }// end of btnLoad_Click
-
         private void btnReset_Click(object sender, EventArgs e)
         {
             EmployeeTreeNode root;

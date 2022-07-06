@@ -13,13 +13,17 @@ namespace DSAL_CA2_Yr2
     {
         public delegate void ReplaceEmployeeDelegate(Employee _selectedEmployee);
         public ReplaceEmployeeDelegate SwapEmployeeCallbackFn;
+        List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
         EmployeeTreeNode _root;
         EmployeeTreeNode _selectedEmployee;
-        public ReplaceEmployeeForm(EmployeeTreeNode root, string employee)
+        string roleId;
+        public ReplaceEmployeeForm(EmployeeTreeNode root, string employee, string roleid)
         {
             InitializeComponent();
             
+            roleId = roleid;
             _root = root;
+            
             treeViewEmployee.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewEmployee_NodeMouseClick);
             treeViewEmployee.Nodes.Add(_root);
 
@@ -30,13 +34,20 @@ namespace DSAL_CA2_Yr2
 
         private void btnSwap_Click(object sender, EventArgs e)
         {
-            if (_selectedEmployee != null)
+            if (_selectedEmployee != null && _selectedEmployee.Employee.Role.RoleId.Equals(roleId))
             {
                 SwapEmployeeCallbackFn(_selectedEmployee.Employee);
                 this.DialogResult = DialogResult.OK;
             }
             else
-                MessageBox.Show("No employee is selected to swap with");
+            {
+                if (_selectedEmployee == null)
+                {
+                    MessageBox.Show("No employee is selected to swap with");
+                }
+                else if (!_selectedEmployee.Employee.Role.RoleId.Equals(roleId))
+                    MessageBox.Show("You can only select employees with same role to swap with");
+            }
         }// end of btnSwap_Click
         private void treeViewEmployee_NodeMouseClick(object sender, EventArgs e)
         {
@@ -55,7 +66,7 @@ namespace DSAL_CA2_Yr2
                 }
                 else
                 {
-                    tbProject.Text = _selectedEmployee.Employee.Project;
+                    tbProject.Text = _selectedEmployee.Employee.Project.ProjectName;
                 }
 
                 if (_selectedEmployee.TopEmployee == null)

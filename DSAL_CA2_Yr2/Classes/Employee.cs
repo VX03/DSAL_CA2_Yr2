@@ -10,7 +10,7 @@ namespace DSAL_CA2_Yr2.Classes
         private string _employeeName;
         private string _employeeId;
         private double _salary;
-        private string _project; //Change to project (set as project name first)
+        private Project _project; //Change to project (set as project name first)
         private Role _role;
         private bool _dummyData;
         private bool _salaryAccountable;
@@ -57,7 +57,7 @@ namespace DSAL_CA2_Yr2.Classes
             get { return _role; }
             set { _role = value; }
         }
-        public string Project
+        public Project Project
         {
             get { return _project; }
             set { _project = value; }

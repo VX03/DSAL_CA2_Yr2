@@ -97,7 +97,7 @@ namespace DSAL_CA2_Yr2
             string parentrole = null;
             role.getParentRoleByName(comboRole.Text, ref parentrole);
 
-            topEmployee = root.getAllReportingOfficer(parentrole);
+            topEmployee = root.getAllEmployeeByRole(parentrole);
             if (topEmployee.Count != 0)
             {
                 foreach (string employeeName in topEmployee)

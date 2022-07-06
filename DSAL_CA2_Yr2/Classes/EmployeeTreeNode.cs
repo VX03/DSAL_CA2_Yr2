@@ -76,6 +76,20 @@ namespace DSAL_CA2_Yr2.Classes
             }
 
         }// end of getEmployeeById 
+        public void getEmployeeWithLeader(ref List<EmployeeTreeNode> employeeList)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.Role.ProjectLeader)
+                {
+                    employeeList.Add(this.SubordinateEmployee[i]);
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getEmployeeWithLeader(ref employeeList);
+                }
+            }
+        }
         public void getSameEmployeeRolesById(string employeeId, ref List<EmployeeTreeNode> employeeList)
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
@@ -90,7 +104,7 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }// end of getEmployeeRolesById
-        public void getAllReportingOfficerDuplicate(string role,ref List<Employee> employeeList)
+        public void getAllEmployeeDuplicate(string role,ref List<Employee> employeeList)
         {
             if (this.Employee.Role.RoleName.Equals(role))
             {
@@ -104,18 +118,32 @@ namespace DSAL_CA2_Yr2.Classes
                 }
                 if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
                 {
-                    this.SubordinateEmployee[i].getAllReportingOfficerDuplicate( role,ref employeeList);
+                    this.SubordinateEmployee[i].getAllEmployeeDuplicate( role,ref employeeList);
                 }
             }
 
         }// end of getAllReportingOfficerDuplicate
-        public List<string> getAllReportingOfficer(string role)
+        public void getAllEmployeeByRoleId(string role,ref List<EmployeeTreeNode> employeeList)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.Role.RoleId.Equals(role))
+                {
+                    employeeList.Add(this.SubordinateEmployee[i]);
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getAllEmployeeByRoleId(role, ref employeeList);
+                }
+            }
+        }
+        public List<string> getAllEmployeeByRole(string role)
         {
             List<Employee> newEmployeeList = new List<Employee>();
             List<Employee> checkEmployeeList = new List<Employee>();
             List<string> employeeList = new List<string>();
 
-            getAllReportingOfficerDuplicate(role,ref newEmployeeList);
+            getAllEmployeeDuplicate(role,ref newEmployeeList);
             foreach(Employee employee in newEmployeeList)
             {
                 if (!checkEmployeeList.Contains(employee))

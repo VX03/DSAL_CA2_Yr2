@@ -4,6 +4,7 @@ using System.Text;
 
 namespace DSAL_CA2_Yr2.Classes
 {
+    [Serializable]
     public class Project
     {
         private string _projectName;
