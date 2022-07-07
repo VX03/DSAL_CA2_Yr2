@@ -27,7 +27,7 @@ namespace DSAL_CA2_Yr2.Classes
             if (p != null)
             {
                 p.ProjectName = project.ProjectName;
-                p.ProjectLeaderId = project.ProjectLeaderId;
+                p.ProjectLeader = project.ProjectLeader;
                 p.Revenue = project.Revenue;
             }
         }// end of update

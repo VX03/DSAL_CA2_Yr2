@@ -9,18 +9,18 @@ namespace DSAL_CA2_Yr2.Classes
     {
         private string _projectName;
         private string _projectId;
-        private string _projectLeaderId;
+        private Employee _projectLeader;
         private double _revenue;
         
         public Project()
         {
             _projectId = UUID.GenerateUUID();
         }
-        public Project(string projectName, string projectLeaderId, double revenue) 
+        public Project(string projectName, Employee projectLeaderId, double revenue) 
         {
             _projectId = UUID.GenerateUUID();
             _projectName = projectName;
-            _projectLeaderId = projectLeaderId;
+            _projectLeader = projectLeaderId;
             _revenue = revenue;
         }
         public string ProjectName
@@ -28,15 +28,14 @@ namespace DSAL_CA2_Yr2.Classes
             get { return _projectName; }
             set { _projectName = value; }
         }
-        public string ProjectLeaderId
+        public Employee ProjectLeader
         {
-            get { return _projectLeaderId; }
-            set { _projectLeaderId = value; }
+            get { return _projectLeader; }
+            set { _projectLeader = value; }
         }
         public string ProjectId
         {
             get { return _projectId; }
-
         }
         public double Revenue
         {

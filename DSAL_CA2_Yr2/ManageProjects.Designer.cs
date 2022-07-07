@@ -368,7 +368,7 @@
             this.groupBox2.Controls.Add(this.label13);
             this.groupBox2.Location = new System.Drawing.Point(1317, 118);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(423, 299);
+            this.groupBox2.Size = new System.Drawing.Size(484, 299);
             this.groupBox2.TabIndex = 31;
             this.groupBox2.TabStop = false;
             // 
@@ -376,40 +376,43 @@
             // 
             this.btnEditDelete.BackColor = System.Drawing.Color.Red;
             this.btnEditDelete.Enabled = false;
-            this.btnEditDelete.Location = new System.Drawing.Point(296, 254);
+            this.btnEditDelete.Location = new System.Drawing.Point(336, 254);
             this.btnEditDelete.Name = "btnEditDelete";
             this.btnEditDelete.Size = new System.Drawing.Size(113, 29);
             this.btnEditDelete.TabIndex = 23;
             this.btnEditDelete.Text = "Delete";
             this.btnEditDelete.UseVisualStyleBackColor = false;
+            this.btnEditDelete.Click += new System.EventHandler(this.btnEditDelete_Click);
             // 
             // btnConfirmEdit
             // 
             this.btnConfirmEdit.BackColor = System.Drawing.Color.IndianRed;
             this.btnConfirmEdit.Enabled = false;
-            this.btnConfirmEdit.Location = new System.Drawing.Point(166, 254);
+            this.btnConfirmEdit.Location = new System.Drawing.Point(206, 254);
             this.btnConfirmEdit.Name = "btnConfirmEdit";
             this.btnConfirmEdit.Size = new System.Drawing.Size(113, 29);
             this.btnConfirmEdit.TabIndex = 22;
             this.btnConfirmEdit.Text = "Confirm Edit";
             this.btnConfirmEdit.UseVisualStyleBackColor = false;
+            this.btnConfirmEdit.Click += new System.EventHandler(this.btnConfirmEdit_Click);
             // 
             // btnEditSearchTeams
             // 
             this.btnEditSearchTeams.BackColor = System.Drawing.SystemColors.Highlight;
             this.btnEditSearchTeams.Enabled = false;
-            this.btnEditSearchTeams.Location = new System.Drawing.Point(13, 254);
+            this.btnEditSearchTeams.Location = new System.Drawing.Point(53, 254);
             this.btnEditSearchTeams.Name = "btnEditSearchTeams";
             this.btnEditSearchTeams.Size = new System.Drawing.Size(134, 29);
             this.btnEditSearchTeams.TabIndex = 21;
             this.btnEditSearchTeams.Text = "Search For Teams";
             this.btnEditSearchTeams.UseVisualStyleBackColor = false;
+            this.btnEditSearchTeams.Click += new System.EventHandler(this.btnEditSearchTeams_Click);
             // 
             // comboEditTeamLeader
             // 
             this.comboEditTeamLeader.Enabled = false;
             this.comboEditTeamLeader.FormattingEnabled = true;
-            this.comboEditTeamLeader.Location = new System.Drawing.Point(180, 202);
+            this.comboEditTeamLeader.Location = new System.Drawing.Point(220, 202);
             this.comboEditTeamLeader.Name = "comboEditTeamLeader";
             this.comboEditTeamLeader.Size = new System.Drawing.Size(209, 28);
             this.comboEditTeamLeader.TabIndex = 20;
@@ -419,7 +422,7 @@
             this.tbEditRevenue.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbEditRevenue.Enabled = false;
             this.tbEditRevenue.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tbEditRevenue.Location = new System.Drawing.Point(180, 162);
+            this.tbEditRevenue.Location = new System.Drawing.Point(220, 162);
             this.tbEditRevenue.Name = "tbEditRevenue";
             this.tbEditRevenue.Size = new System.Drawing.Size(209, 27);
             this.tbEditRevenue.TabIndex = 19;
@@ -428,7 +431,7 @@
             // 
             this.label14.AutoSize = true;
             this.label14.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label14.Location = new System.Drawing.Point(29, 205);
+            this.label14.Location = new System.Drawing.Point(69, 205);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(98, 20);
             this.label14.TabIndex = 18;
@@ -438,7 +441,7 @@
             // 
             this.label15.AutoSize = true;
             this.label15.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label15.Location = new System.Drawing.Point(29, 162);
+            this.label15.Location = new System.Drawing.Point(69, 162);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(103, 20);
             this.label15.TabIndex = 17;
@@ -449,7 +452,7 @@
             this.tbEditProjectName.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbEditProjectName.Enabled = false;
             this.tbEditProjectName.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tbEditProjectName.Location = new System.Drawing.Point(180, 117);
+            this.tbEditProjectName.Location = new System.Drawing.Point(220, 117);
             this.tbEditProjectName.Name = "tbEditProjectName";
             this.tbEditProjectName.Size = new System.Drawing.Size(209, 27);
             this.tbEditProjectName.TabIndex = 16;
@@ -459,7 +462,7 @@
             this.tbEditProjectId.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.tbEditProjectId.Enabled = false;
             this.tbEditProjectId.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.tbEditProjectId.Location = new System.Drawing.Point(180, 79);
+            this.tbEditProjectId.Location = new System.Drawing.Point(220, 79);
             this.tbEditProjectId.Name = "tbEditProjectId";
             this.tbEditProjectId.Size = new System.Drawing.Size(209, 27);
             this.tbEditProjectId.TabIndex = 15;
@@ -468,7 +471,7 @@
             // 
             this.Reporting.AutoSize = true;
             this.Reporting.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.Reporting.Location = new System.Drawing.Point(29, 119);
+            this.Reporting.Location = new System.Drawing.Point(69, 119);
             this.Reporting.Name = "Reporting";
             this.Reporting.Size = new System.Drawing.Size(104, 20);
             this.Reporting.TabIndex = 14;
@@ -478,7 +481,7 @@
             // 
             this.label16.AutoSize = true;
             this.label16.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label16.Location = new System.Drawing.Point(29, 81);
+            this.label16.Location = new System.Drawing.Point(69, 81);
             this.label16.Name = "label16";
             this.label16.Size = new System.Drawing.Size(47, 20);
             this.label16.TabIndex = 13;
@@ -488,7 +491,7 @@
             // 
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label13.Location = new System.Drawing.Point(139, 33);
+            this.label13.Location = new System.Drawing.Point(189, 43);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(130, 20);
             this.label13.TabIndex = 1;
@@ -511,7 +514,7 @@
             this.listviewProjectList.Location = new System.Drawing.Point(1320, 465);
             this.listviewProjectList.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.listviewProjectList.Name = "listviewProjectList";
-            this.listviewProjectList.Size = new System.Drawing.Size(420, 384);
+            this.listviewProjectList.Size = new System.Drawing.Size(481, 384);
             this.listviewProjectList.TabIndex = 33;
             this.listviewProjectList.UseCompatibleStateImageBehavior = false;
             // 
