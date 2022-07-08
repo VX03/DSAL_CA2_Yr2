@@ -13,6 +13,7 @@ namespace DSAL_CA2_Yr2
     {
         EmployeeTreeNode _employee = new EmployeeTreeNode();
         Project _choosenProj = new Project();
+        ListViewItem _project = new ListViewItem();
         ProjectList _root = new ProjectList();
         RoleTreeNode _role = new RoleTreeNode();
         private General general = new General();
@@ -97,17 +98,19 @@ namespace DSAL_CA2_Yr2
         {
             tbEditProjectName.Enabled = enable;
             tbEditRevenue.Enabled = enable;
-            comboEditTeamLeader.Enabled = enable;
+            comboEditTeamLeader.Enabled = false;
 
             btnEditDelete.Enabled = enable;
             btnConfirmEdit.Enabled = enable;
             btnEditSearchTeams.Enabled = enable;
         }// end of editProjectControls
-        public void searchTeam(double revenue, ComboBox combobox)
+        public void searchTeam(double revenue, ComboBox combobox, string projectId)
         {
+            combobox.Items.Clear();
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
 
             _employee.getEmployeeWithLeader(ref employeeList);
+            
             List<EmployeeTreeNode> employeeList2 = new List<EmployeeTreeNode>(employeeList);
 
             // check if it is full team
@@ -119,7 +122,14 @@ namespace DSAL_CA2_Yr2
                 bool check;
                 double allrevenue = employeeTreeNode.Employee.Salary;
                 List<bool> checkList = new List<bool>();
+                EmployeeTreeNode epn = employeeTreeNode;
 
+                while(epn.TopEmployee.Employee.Salary > 0)
+                {
+                    epn = epn.TopEmployee;
+                    allrevenue += epn.Employee.Salary;
+                }
+                
                 // check if there is full team and total salary
                 foreach (RoleTreeNode roleTreeNode in roleList)
                 {
@@ -151,7 +161,7 @@ namespace DSAL_CA2_Yr2
                     bool checking = false;
                     foreach (EmployeeTreeNode employeeTreeNode3 in employee3)
                     {
-                        if (employeeTreeNode3.Employee.Project == null)
+                        if (employeeTreeNode3.Employee.Project == null ||( employeeTreeNode3.Employee.Project != null && employeeTreeNode3.Employee.Project.ProjectId.Equals(projectId)))
                         {
                             checking = true;
                         }
@@ -166,6 +176,8 @@ namespace DSAL_CA2_Yr2
             if (employeeList2.Count == 0)
             {
                 MessageBox.Show("There is no team that fits the criteria");
+                tbAddProjectName.Enabled = true;
+                tbAddProjectRevenue.Enabled = true;
             }
             else
             {
@@ -203,6 +215,7 @@ namespace DSAL_CA2_Yr2
             {
                 addProjectControls(false);
                 editProjectControls(true);
+
             }
         }// end of comboBoxMode_SelectedIndexChanged
 
@@ -224,7 +237,6 @@ namespace DSAL_CA2_Yr2
         private void btnAddSearchTeams_Click(object sender, EventArgs e)
         {   
             string projectName = tbAddProjectName.Text;
-            
             if (projectName != ""|| projectName != null || (tbAddProjectName.Enabled && tbAddProjectRevenue.Enabled))
             {
                 setBackColorToWhite();
@@ -232,10 +244,11 @@ namespace DSAL_CA2_Yr2
                 try
                 {
                     double revenue = Double.Parse(tbAddProjectRevenue.Text);
-                    searchTeam(revenue, comboAddTeamLeader);
+                    searchTeam(revenue, comboAddTeamLeader, null) ;
 
                     tbAddProjectName.Enabled = false;
                     tbAddProjectRevenue.Enabled = false;
+
                 }
                 catch (Exception ex)
                 {
@@ -325,7 +338,6 @@ namespace DSAL_CA2_Yr2
                             }
                         }
 
-                        tbConsole.Text = tbAddProjectName.Text + " has been added.";
 
                         setBackColorToWhite();
                         tbAddProjectName.Clear();
@@ -333,6 +345,12 @@ namespace DSAL_CA2_Yr2
                         comboAddTeamLeader.Items.Clear();
                         comboAddTeamLeader.Text = null;
                         addProjectControls(true);
+
+                        tbConsole.Text = "Project added:\r\nName: " + projectName + "\r\nRevenue: " + revenue + "\r\nTeam Leader: " + leader;
+                    }
+                    else
+                    {
+                        MessageBox.Show("No team has been selected");
                     }
                 }
             }catch (Exception ex)
@@ -354,11 +372,14 @@ namespace DSAL_CA2_Yr2
                 string projectName = tbEditProjectName.Text;
                 tbConsole.Text = projectName + " has been selected to be edited";
 
-                searchTeam(revenue, comboEditTeamLeader);
+                searchTeam(revenue, comboEditTeamLeader, _choosenProj.ProjectId) ;
+                comboEditTeamLeader.Enabled = true;
+
             }catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
+
         }// end of btnEditSearchTeams_Click
         private void btnConfirmEdit_Click(object sender, EventArgs e)
         {
@@ -366,7 +387,23 @@ namespace DSAL_CA2_Yr2
         }// end of btnConfirmEdit_Click
         private void btnEditDelete_Click(object sender, EventArgs e)
         {
-            
+            try
+            {                
+                List<EmployeeTreeNode> employees = new List<EmployeeTreeNode>();
+                _employee.getEmployeeByProjectId(_choosenProj.ProjectId, ref employees);
+
+                foreach(EmployeeTreeNode employee in employees)
+                {
+                    employee.Employee.Project = null;
+                }
+                _root.deleteProject(_choosenProj.ProjectId);
+                listviewProjectList.Items.RemoveAt(_project.Index);
+
+
+            }catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }// end of btnEditDelete_Click
 
         // End of Edit Project--------------------------------------------------------------------------------------------------
@@ -382,19 +419,19 @@ namespace DSAL_CA2_Yr2
         }//End of GetItemFromPoint
         private void listviewProjectList_Click(object sender, EventArgs e)
         {
-            ListViewItem selectedItem = GetItemFromPoint(this.listviewProjectList, Cursor.Position);
+            _project = GetItemFromPoint(this.listviewProjectList, Cursor.Position);
 
-            if (selectedItem == null)
+            if (_project == null)
             {
                 return;
             }
-            _choosenProj = (Project)selectedItem.Tag;
+            _choosenProj = (Project)_project.Tag;
 
             tbEditProjectId.Text = _choosenProj.ProjectId;
             tbEditProjectName.Text = _choosenProj.ProjectName;
             tbEditRevenue.Text = _choosenProj.Revenue.ToString();
-            comboEditTeamLeader.Items.Add(_choosenProj.ProjectLeader.EmployeeName);
-            comboEditTeamLeader.SelectedItem = _choosenProj.ProjectLeader.EmployeeName;
+
+            comboEditTeamLeader.Text = _choosenProj.ProjectLeader.EmployeeName;
             comboEditTeamLeader.Items.Clear();
         }// end of listviewProjectList_Click
 

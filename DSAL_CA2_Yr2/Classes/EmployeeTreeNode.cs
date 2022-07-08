@@ -103,7 +103,21 @@ namespace DSAL_CA2_Yr2.Classes
                     this.SubordinateEmployee[i].getEmployeeWithLeader(ref employeeList);
                 }
             }
-        }
+        }// end of getEmployeeWithLeader
+        public void getEmployeeByProjectId(string projectId, ref List<EmployeeTreeNode> employeeList)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.Project != null && this.SubordinateEmployee[i].Employee.Project.ProjectId.Equals(projectId))
+                {
+                    employeeList.Add(this.SubordinateEmployee[i]);
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getEmployeeByProjectId(projectId, ref employeeList);
+                }
+            }
+        }//end of getEmployeeByProjectId
         public void getSameEmployeeRolesById(string employeeId, ref List<EmployeeTreeNode> employeeList)
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
