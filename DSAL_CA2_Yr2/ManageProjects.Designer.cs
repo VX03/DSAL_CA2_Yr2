@@ -85,6 +85,7 @@
             this.btnLoad.TabIndex = 7;
             this.btnLoad.Text = "Load";
             this.btnLoad.UseVisualStyleBackColor = false;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnSave
             // 
@@ -96,6 +97,7 @@
             this.btnSave.TabIndex = 6;
             this.btnSave.Text = "Save";
             this.btnSave.UseVisualStyleBackColor = false;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
             // 
             // btnReset
             // 
@@ -108,6 +110,7 @@
             this.btnReset.TabIndex = 5;
             this.btnReset.Text = "Reset";
             this.btnReset.UseVisualStyleBackColor = false;
+            this.btnReset.Click += new System.EventHandler(this.btnReset_Click);
             // 
             // label1
             // 
@@ -129,6 +132,7 @@
             this.btnCollapseAll.TabIndex = 26;
             this.btnCollapseAll.Text = "Collapse All";
             this.btnCollapseAll.UseVisualStyleBackColor = false;
+            this.btnCollapseAll.Click += new System.EventHandler(this.btnCollapseAll_Click);
             // 
             // btnExpandAll
             // 
@@ -140,6 +144,7 @@
             this.btnExpandAll.TabIndex = 25;
             this.btnExpandAll.Text = "Expand All";
             this.btnExpandAll.UseVisualStyleBackColor = false;
+            this.btnExpandAll.Click += new System.EventHandler(this.btnExpandAll_Click);
             // 
             // treeViewEmployees
             // 

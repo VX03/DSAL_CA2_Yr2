@@ -23,6 +23,13 @@ namespace DSAL_CA2_Yr2.Classes
             _projectLeader = projectLeaderId;
             _revenue = revenue;
         }
+        public Project(string projectId, string projectName, Employee projectLeader, double revenue)
+        {
+            this._projectId = projectId;
+            this._projectName = projectName;
+            this._projectLeader = projectLeader;
+            this.Revenue = revenue;
+        }
         public string ProjectName
         {
             get { return _projectName; }

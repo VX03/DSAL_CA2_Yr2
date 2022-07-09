@@ -42,10 +42,27 @@ namespace DSAL_CA2_Yr2
                 EmployeeTreeNode employee = new EmployeeTreeNode(new Employee("root", 0, _role.Role, false, false));
                 _employee = employee;
             }
-
+            
             treeViewEmployees.Nodes.Add(_employee);
             treeViewEmployees.ExpandAll();
-
+            
+            _root = _root.LoadFromFileBinary();
+            if (_root != null)
+            {
+                foreach (var item in _root.List)
+                {
+                    ListViewItem lvi = new ListViewItem(item.ProjectId);
+                    lvi.SubItems.Add(item.ProjectName);
+                    lvi.SubItems.Add(item.Revenue.ToString());
+                    lvi.SubItems.Add(item.ProjectLeader.EmployeeName);
+                    lvi.Tag = item;
+                    listviewProjectList.Items.Add(lvi);
+                }
+            }
+            else
+            {
+                _root = new ProjectList();
+            }
             // list view Project
             ColumnHeader id, name, revenue, leader;
 
@@ -124,7 +141,7 @@ namespace DSAL_CA2_Yr2
                 List<bool> checkList = new List<bool>();
                 EmployeeTreeNode epn = employeeTreeNode;
 
-                while(epn.TopEmployee.Employee.Salary > 0)
+                while(epn.TopEmployee.Employee.Salary > 0 && epn.TopEmployee.Employee.SalaryAccountable)
                 {
                     epn = epn.TopEmployee;
                     allrevenue += epn.Employee.Salary;
@@ -137,7 +154,7 @@ namespace DSAL_CA2_Yr2
 
                     for (int i = 0; i < employeeTreeNode.SubordinateEmployee.Count; i++)
                     {
-                        if (employeeTreeNode.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId))
+                        if (employeeTreeNode.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId) && employeeTreeNode.SubordinateEmployee[i].Employee.SalaryAccountable)
                         {
                             allrevenue += employeeTreeNode.SubordinateEmployee[i].Employee.Salary;
                             check = true;
@@ -176,11 +193,29 @@ namespace DSAL_CA2_Yr2
             if (employeeList2.Count == 0)
             {
                 MessageBox.Show("There is no team that fits the criteria");
-                tbAddProjectName.Enabled = true;
-                tbAddProjectRevenue.Enabled = true;
+                if (projectId == null)
+                {
+                    tbAddProjectName.Enabled = true;
+                    tbAddProjectRevenue.Enabled = true;
+                }
+                else
+                {
+                    tbEditProjectName.Enabled = true;
+                    tbEditRevenue.Enabled = true;
+                }
             }
             else
             {
+                if (projectId == null)
+                {
+                    tbAddProjectName.Enabled = false;
+                    tbAddProjectRevenue.Enabled = false;
+                }
+                else
+                {
+                    tbEditProjectName.Enabled = false;
+                    tbEditRevenue.Enabled = false;
+                }
                 foreach (EmployeeTreeNode employeeTreeNode in employeeList2)
                 {
                     employeeTreeNode.BackColor = Color.Yellow;
@@ -237,18 +272,24 @@ namespace DSAL_CA2_Yr2
         private void btnAddSearchTeams_Click(object sender, EventArgs e)
         {   
             string projectName = tbAddProjectName.Text;
-            if (projectName != ""|| projectName != null || (tbAddProjectName.Enabled && tbAddProjectRevenue.Enabled))
+            if ((tbAddProjectName.Enabled && tbAddProjectRevenue.Enabled))
             {
                 setBackColorToWhite();
 
+                if (projectName == null || projectName.Equals(""))
+                {
+                    MessageBox.Show("Please input a name");
+                    return;
+                }
                 try
                 {
                     double revenue = Double.Parse(tbAddProjectRevenue.Text);
                     searchTeam(revenue, comboAddTeamLeader, null) ;
 
-                    tbAddProjectName.Enabled = false;
-                    tbAddProjectRevenue.Enabled = false;
-
+                }
+                catch (FormatException ex)
+                {
+                    MessageBox.Show("Please input a valid revenue.");
                 }
                 catch (Exception ex)
                 {
@@ -286,7 +327,6 @@ namespace DSAL_CA2_Yr2
                             else if (!employeeTreeNode.Employee.Role.ProjectLeader && employeeTreeNode.Employee.Project == null) 
                             {
                                 k = 1;
-                                break;
                             }
                         }
                         
@@ -368,14 +408,33 @@ namespace DSAL_CA2_Yr2
 
             try
             {
-                double revenue = Double.Parse(tbEditRevenue.Text);
+                string projectId = tbEditProjectId.Text;
                 string projectName = tbEditProjectName.Text;
-                tbConsole.Text = projectName + " has been selected to be edited";
 
+                if (projectId == null || projectId.Equals(""))
+                {
+                    MessageBox.Show("Please select a project first");
+                    return;
+                }
+                
+                if (projectName == null || projectName.Equals(""))
+                {
+                    MessageBox.Show("Please input a name");
+                    return;
+                }
+                
+                double revenue = Double.Parse(tbEditRevenue.Text);
+                tbConsole.Text = projectName + " has been selected to be edited";
+                comboEditTeamLeader.Text = "";
                 searchTeam(revenue, comboEditTeamLeader, _choosenProj.ProjectId) ;
                 comboEditTeamLeader.Enabled = true;
 
-            }catch (Exception ex)
+            }
+            catch (FormatException ex)
+            {
+                MessageBox.Show("Please input a valid revenue.");
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -383,7 +442,114 @@ namespace DSAL_CA2_Yr2
         }// end of btnEditSearchTeams_Click
         private void btnConfirmEdit_Click(object sender, EventArgs e)
         {
+            try
+            {
+                string projectId = tbEditProjectId.Text;
+                string projectName = tbEditProjectName.Text;
+                double revenue = Double.Parse(tbEditRevenue.Text);
 
+                string leader = comboEditTeamLeader.Text;
+
+                if (leader == null || leader.Equals(""))
+                {
+                    MessageBox.Show("Please select a leader");
+                    return;
+                }
+
+                if (!leader.Equals(_choosenProj.ProjectLeader.EmployeeName))
+                {
+                    List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
+                    List<EmployeeTreeNode> employeeList2 = new List<EmployeeTreeNode>();
+
+                    _employee.getEmployeeByProjectId(projectId, ref employeeList);
+
+                    // setting project to null
+                    foreach (EmployeeTreeNode employeeTreeNode in employeeList)
+                    {
+                        employeeTreeNode.Employee.Project = null;
+                    }
+
+                    _employee.getEmployeeByName(leader, ref employeeList2);
+                    if (employeeList2.Count > 0)
+                    {
+                        int k = 0;
+
+                        //checking
+                        foreach (EmployeeTreeNode employeeTreeNode in employeeList2)
+                        {
+                            if (employeeTreeNode.Employee.Project == null && employeeTreeNode.Employee.Role.ProjectLeader)
+                            {
+                                k = 0;
+                                break;
+                            }
+                            else if (!employeeTreeNode.Employee.Role.ProjectLeader && employeeTreeNode.Employee.Project == null)
+                            {
+                                k = 1;
+                            }
+                        }
+
+                        // setting project
+                        if (k == 0)
+                        {
+                            foreach (EmployeeTreeNode employeeTreeNode in employeeList2)
+                            {
+                                if (employeeTreeNode.Employee.Project == null && employeeTreeNode.Employee.Role.ProjectLeader)
+                                {
+                                    //updating project
+                                    Project newProject = new Project(projectId, projectName, employeeTreeNode.Employee, revenue);
+
+                                    employeeTreeNode.Employee.Project = newProject;
+
+                                    foreach (EmployeeTreeNode employeeTreeNodeS in employeeTreeNode.SubordinateEmployee)
+                                    {
+                                        employeeTreeNodeS.Employee.Project = newProject;
+                                    }
+                                    _root.UpdateProject(newProject);
+
+                                    _project.SubItems[0].Text = projectId;
+                                    _project.SubItems[1].Text = projectName;
+                                    _project.SubItems[2].Text = revenue.ToString();
+                                    _project.SubItems[3].Text = employeeTreeNode.Employee.EmployeeName;
+                                }
+                            }
+                        }
+                        else if (k == 1)
+                        {
+                            foreach (EmployeeTreeNode employeeTreeNode in employeeList2)
+                            {
+                                if (employeeTreeNode.Employee.Project == null && !employeeTreeNode.Employee.Role.ProjectLeader)
+                                {
+                                    //updating project
+                                    Project newProject = new Project(projectName, employeeTreeNode.Employee, revenue);
+                                    employeeTreeNode.Employee.Project = newProject;
+
+                                    _root.UpdateProject(newProject);
+
+                                    _project.SubItems[0].Text = projectId;
+                                    _project.SubItems[1].Text = projectName;
+                                    _project.SubItems[2].Text = revenue.ToString();
+                                    _project.SubItems[3].Text = employeeTreeNode.Employee.EmployeeName;
+                                }
+                            }
+                        }
+
+                    }
+                }
+                else
+                {
+                    Project newProject = new Project(projectId, projectName, _choosenProj.ProjectLeader, revenue);
+
+                    _root.UpdateProject(newProject);
+
+                    _project.SubItems[0].Text = projectId;
+                    _project.SubItems[1].Text = projectName;
+                    _project.SubItems[2].Text = revenue.ToString();
+                    _project.SubItems[3].Text = _choosenProj.ProjectLeader.EmployeeName;
+                }
+            }catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
         }// end of btnConfirmEdit_Click
         private void btnEditDelete_Click(object sender, EventArgs e)
         {
@@ -396,6 +562,7 @@ namespace DSAL_CA2_Yr2
                 {
                     employee.Employee.Project = null;
                 }
+
                 _root.deleteProject(_choosenProj.ProjectId);
                 listviewProjectList.Items.RemoveAt(_project.Index);
 
@@ -435,6 +602,96 @@ namespace DSAL_CA2_Yr2
             comboEditTeamLeader.Items.Clear();
         }// end of listviewProjectList_Click
 
-        // End of ListViewProject-----------------------------------------------------------------------------------------------
+        // End of ListViewProject ----------------------------------------------------------------------------------------------
+
+        // Expand / Collapse treeview ------------------------------------------------------------------------------------------
+
+        private void btnExpandAll_Click(object sender, EventArgs e)
+        {
+            treeViewEmployees.ExpandAll();
+        }// end of btnExpandAll_Click
+
+        private void btnCollapseAll_Click(object sender, EventArgs e)
+        {
+            treeViewEmployees.CollapseAll();
+        }// end of btnCollapseAll_Click
+
+        // End of Expand / Collapse treeview------------------------------------------------------------------------------------
+
+        //  Load / Save Data ---------------------------------------------------------------------------------------------------
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            listviewProjectList.Items.Clear();
+            treeViewEmployees.Nodes.Clear();
+
+            _root = _root.LoadFromFileBinary();
+            _employee = _employee.LoadFromFileBinary();
+            _employee.RebuildTreeNodes();
+
+            treeViewEmployees.Nodes.Add(_employee);
+            treeViewEmployees.ExpandAll();
+
+            if (_root != null)
+            {
+                foreach (var item in _root.List)
+                {
+                    ListViewItem lvi = new ListViewItem(item.ProjectId);
+                    lvi.SubItems.Add(item.ProjectName);
+                    lvi.SubItems.Add(item.Revenue.ToString());
+                    lvi.SubItems.Add(item.ProjectLeader.EmployeeName);
+                    lvi.Tag = item;
+                    listviewProjectList.Items.Add(lvi);
+                }
+            }
+            else
+            {
+                MessageBox.Show("No Data to load from file");
+                _root = new ProjectList();
+            }
+        }// end of btnLoad_Click
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            setBackColorToWhite(); 
+            _root.SaveToFileBinary();
+            _employee.SaveToFileBinary();
+        }// end of btnSave_Click
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            comboBoxMode.SelectedIndex = 0;
+
+            tbAddProjectName.Clear();
+            tbAddProjectRevenue.Clear();
+            comboAddTeamLeader.Items.Clear();
+
+            tbEditProjectId.Clear();
+            tbEditProjectName.Clear();
+            tbEditRevenue.Clear();
+            comboEditTeamLeader.Items.Clear();
+
+            setBackColorToWhite();
+
+            listviewProjectList.Items.Clear();
+
+            _root = _root.LoadFromFileBinary();
+            if (_root != null)
+            {
+                foreach (var item in _root.List)
+                {
+                    ListViewItem lvi = new ListViewItem(item.ProjectId);
+                    lvi.SubItems.Add(item.ProjectName);
+                    lvi.SubItems.Add(item.Revenue.ToString());
+                    lvi.SubItems.Add(item.ProjectLeader.EmployeeName);
+                    lvi.Tag = item;
+                    listviewProjectList.Items.Add(lvi);
+                }
+            }
+            else
+            {
+                _root = new ProjectList();
+            }
+        }// end of btnReset_Click
+
+        // End of Load / Save Data ---------------------------------------------------------------------------------------------
     }
 }
