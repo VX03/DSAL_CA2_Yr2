@@ -247,6 +247,10 @@ namespace DSAL_CA2_Yr2
         {
             tbConsole.Text = "Employee Added:\r\nName: "+employeeName+"\r\nPosition: "+role.RoleName+"\r\nSalary: "+salary+"\r\nDummy Data: "+dummy+"\r\nSalary Accountable: "+accountable;
             EmployeeTreeNode employee = new EmployeeTreeNode(new Employee(employeeName, salary, role, dummy, accountable));
+            if (employee.TopEmployee.Employee.Role.ProjectLeader)
+            {
+                employee.Employee.Project = employee.TopEmployee.Employee.Project;
+            }
             _currentSelectedEmployee.AddEmployeeSubordinate(employee);
             treeViewEmployee.SelectedNode.Expand();
         }// end of AddEmployeeCallbackFn
