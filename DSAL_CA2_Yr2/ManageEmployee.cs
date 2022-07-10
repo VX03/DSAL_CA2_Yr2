@@ -16,6 +16,8 @@ namespace DSAL_CA2_Yr2
         private RoleTreeNode _role = new RoleTreeNode();
         private EmployeeTreeNode _currentSelectedEmployee;
         private General general = new General();
+        ProjectList _projectList = new ProjectList();
+
         public ManageEmployee()
         {
             InitializeComponent();
@@ -47,6 +49,8 @@ namespace DSAL_CA2_Yr2
             
             treeViewEmployee.Nodes.Add(_root);
             treeViewEmployee.ExpandAll();
+
+            _projectList = _projectList.LoadFromFileBinary();
         }// End of ManageEmployee_Load
 
         // Create Context Menu on Right Click ------------------------------------------------------------------------------------------------
@@ -57,13 +61,14 @@ namespace DSAL_CA2_Yr2
             if (_currentSelectedEmployee != null)
             {
                 string id = "", project = "", name = "", salary = "", role = "", officername = "";
-
+                List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
 
                 id = _currentSelectedEmployee.Employee.EmployeeId;
                 
                 name = _currentSelectedEmployee.Employee.EmployeeName;
                 salary = _currentSelectedEmployee.Employee.Salary.ToString();
                 role = _currentSelectedEmployee.Employee.Role.RoleName;
+
                 if (_currentSelectedEmployee.TopEmployee != null)
                 {
                     if (_currentSelectedEmployee.Employee.Project != null)
@@ -77,7 +82,41 @@ namespace DSAL_CA2_Yr2
                 }
                 else
                     officername = "N.A";
-                    
+                
+                _root.getEmployeeByName(name, ref employeeList);    
+                if(employeeList.Count > 1)
+                {
+                    List<bool> check = new List<bool>();
+                    foreach (EmployeeTreeNode employeeTreeNode in employeeList)
+                    {
+                        if(employeeTreeNode.Employee.Project != null)
+                            check.Add(true);
+                        else
+                            check.Add(false);
+                    }
+                    if (check.Contains(false)) ;
+                    else
+                    {
+
+                        if (!_currentSelectedEmployee.Employee.Role.ProjectLeader && _currentSelectedEmployee.Employee.Project != null)
+                         {
+                             string proj = "";
+                             foreach(EmployeeTreeNode employee in employeeList)
+                             {
+                                if (proj.Equals(""))
+                                    proj += employee.Employee.Project.ProjectName;
+                                else
+                                    proj += ", " + employee.Employee.Project.ProjectName;
+                             }
+                            project = proj;
+                        }// end of foreach
+                        else
+                        {
+
+                        }
+                    }
+                }// end of foreach
+
                 tbId.Text = id;
                 tbReportingOfficer.Text = officername;
                 tbName.Text = name;
@@ -231,9 +270,14 @@ namespace DSAL_CA2_Yr2
                 editForm.ShowDialog();
             }
         }//end of MenuItemEditEmployeeDetails_Click
-        private void EditEmployeeCallbackFn(string employeeName, double salary, bool dummy, bool sa)
+        private void EditEmployeeCallbackFn(string employeeName, double salary, bool dummy, bool sa,Project p)
         {
             _currentSelectedEmployee.UpdateEmployee(employeeName, salary, dummy, sa);
+            if (p != null)
+            {
+                Project newP = new Project(p.ProjectId, p.ProjectName, _currentSelectedEmployee.Employee, p.Revenue);
+                _projectList.UpdateProject(newP);
+            }
             tbConsole.Text = "Updated Employee:\r\nName: " + employeeName + "\r\nSalary: " + salary + "\r\nDummy Data: " + dummy + "\r\nSalary Accountable: " + sa;
         }// end of EditEmployeeCallbackFn
 
@@ -340,6 +384,7 @@ namespace DSAL_CA2_Yr2
             double salary = _currentSelectedEmployee.Employee.Salary;
             bool dummy = _currentSelectedEmployee.Employee.DummyData;
             bool sa = _currentSelectedEmployee.Employee.SalaryAccountable;
+            Project project = _currentSelectedEmployee.Employee.Project;
 
             EmployeeTreeNode employee = new EmployeeTreeNode();
             _root.getEmployeeById(selectedEmployee.EmployeeId, ref employee);
@@ -350,12 +395,22 @@ namespace DSAL_CA2_Yr2
             _currentSelectedEmployee.Employee.DummyData = employee.Employee.DummyData;
             _currentSelectedEmployee.Employee.SalaryAccountable = employee.Employee.SalaryAccountable;
             _currentSelectedEmployee.Employee.Salary = employee.Employee.Salary;
+            if (_currentSelectedEmployee.Employee.Project != null)
+            {
+                _currentSelectedEmployee.Employee.Project.ProjectLeader = _currentSelectedEmployee.Employee;
+                _projectList.UpdateProject(_currentSelectedEmployee.Employee.Project);
+            }
 
             employee.Employee.EmployeeId = id;
             employee.Employee.EmployeeName = name;
             employee.Employee.DummyData = dummy;
             employee.Employee.SalaryAccountable = sa;
             employee.Employee.Salary = salary;
+            if(employee.Employee.Project != null)
+            {
+                employee.Employee.Project.ProjectLeader = employee.Employee;
+                _projectList.UpdateProject(employee.Employee.Project);
+            }
             // set treeview text
             _root.setEmployeeTreeNodeText(employee.Employee.EmployeeId);
             _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
@@ -475,6 +530,7 @@ namespace DSAL_CA2_Yr2
         private void btnSave_Click(object sender, EventArgs e)
         {
             _root.SaveToFileBinary();
+            _projectList.SaveToFileBinary();
         }// end of btnSave_Click
         private void btnLoad_Click(object sender, EventArgs e)
         {

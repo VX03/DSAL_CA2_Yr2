@@ -16,6 +16,7 @@ namespace DSAL_CA2_Yr2
         List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
         EmployeeTreeNode _root;
         EmployeeTreeNode _selectedEmployee;
+        ProjectList _projectList = new ProjectList();
         string roleId;
         public ReplaceEmployeeForm(EmployeeTreeNode root, string employee, string roleid)
         {
@@ -30,6 +31,7 @@ namespace DSAL_CA2_Yr2
             treeViewEmployee.ExpandAll();
 
             tbEmployee.Text = employee;
+
         }
 
         private void btnSwap_Click(object sender, EventArgs e)

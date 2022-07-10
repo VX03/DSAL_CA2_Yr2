@@ -76,6 +76,27 @@ namespace DSAL_CA2_Yr2.Classes
             }
 
         }// end of getEmployeeById 
+        public void getAllSalary(ref double revenue) 
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                revenue += this.SubordinateEmployee[i].Employee.Salary;
+
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getAllSalary(ref revenue);
+                }
+            }
+        } 
+        public void getTopAllSalary(ref double revenue)
+        {
+            EmployeeTreeNode TopEmployee = this.TopEmployee;
+            while (TopEmployee != null)
+            {
+                revenue += TopEmployee.Employee.Salary;
+                TopEmployee = TopEmployee.TopEmployee;
+            }
+        }
         public void getEmployeeByName(string name, ref List<EmployeeTreeNode> employeeList)
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
@@ -389,7 +410,7 @@ namespace DSAL_CA2_Yr2.Classes
                 bf.Serialize(stream, this);
                 stream.Close();
 
-                MessageBox.Show("Data is added to file");
+                MessageBox.Show("Data is added to employee file");
             }
             catch (Exception ex)
             {

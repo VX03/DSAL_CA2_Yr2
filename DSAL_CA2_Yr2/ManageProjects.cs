@@ -146,39 +146,46 @@ namespace DSAL_CA2_Yr2
                     epn = epn.TopEmployee;
                     allrevenue += epn.Employee.Salary;
                 }
-                
-                // check if there is full team and total salary
-                foreach (RoleTreeNode roleTreeNode in roleList)
+                if (employeeTreeNode.Employee.Project == null)
                 {
-                    check = false;
-
-                    for (int i = 0; i < employeeTreeNode.SubordinateEmployee.Count; i++)
+                    // check if there is full team and total salary
+                    foreach (RoleTreeNode roleTreeNode in roleList)
                     {
-                        if (employeeTreeNode.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId) && employeeTreeNode.SubordinateEmployee[i].Employee.SalaryAccountable)
+                        check = false;
+
+                        for (int i = 0; i < employeeTreeNode.SubordinateEmployee.Count; i++)
                         {
-                            allrevenue += employeeTreeNode.SubordinateEmployee[i].Employee.Salary;
-                            check = true;
+                            if (employeeTreeNode.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId) && employeeTreeNode.SubordinateEmployee[i].Employee.SalaryAccountable)
+                            {
+                                allrevenue += employeeTreeNode.SubordinateEmployee[i].Employee.Salary;
+                                check = true;
+                            }
                         }
+                        checkList.Add(check);
+
+                    }// foreach role node
+
+                    // remove item from list
+                    if (checkList.Contains(false) || allrevenue < revenue)
+                    {
+                        employeeList2.Remove(employeeTreeNode);
                     }
-                    checkList.Add(check);
-
-                }// foreach role node
-
-                // remove item from list
-                if (checkList.Contains(false) || allrevenue < revenue)
-                {
-                    employeeList2.Remove(employeeTreeNode);
                 }
-
-                if (employeeTreeNode.Employee.Project != null)
+                else if (employeeTreeNode.Employee.Project != null)
                 {
                     List<EmployeeTreeNode> employee3 = new List<EmployeeTreeNode>();
                     _employee.getEmployeeByName(employeeTreeNode.Employee.EmployeeName, ref employee3);
-
+                    double r;
                     bool checking = false;
                     foreach (EmployeeTreeNode employeeTreeNode3 in employee3)
                     {
-                        if (employeeTreeNode3.Employee.Project == null ||( employeeTreeNode3.Employee.Project != null && employeeTreeNode3.Employee.Project.ProjectId.Equals(projectId)))
+                        r = employeeTreeNode3.Employee.Salary;
+                        employeeTreeNode3.getAllSalary(ref r);
+                        employeeTreeNode3.getTopAllSalary(ref r);
+                        if (
+                            (employeeTreeNode3.Employee.Project == null || 
+                            (employeeTreeNode3.Employee.Project != null && employeeTreeNode3.Employee.Project.ProjectId.Equals(projectId))) && 
+                            r > revenue)
                         {
                             checking = true;
                         }
@@ -460,7 +467,7 @@ namespace DSAL_CA2_Yr2
                 {
                     List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
                     List<EmployeeTreeNode> employeeList2 = new List<EmployeeTreeNode>();
-
+                    double r;
                     _employee.getEmployeeByProjectId(projectId, ref employeeList);
 
                     // setting project to null
@@ -491,9 +498,14 @@ namespace DSAL_CA2_Yr2
                         // setting project
                         if (k == 0)
                         {
+                            bool check = false;
                             foreach (EmployeeTreeNode employeeTreeNode in employeeList2)
                             {
-                                if (employeeTreeNode.Employee.Project == null && employeeTreeNode.Employee.Role.ProjectLeader)
+                                r = employeeTreeNode.Employee.Salary;
+                                employeeTreeNode.getTopAllSalary(ref r);
+                                employeeTreeNode.getAllSalary(ref r);
+
+                                if (employeeTreeNode.Employee.Project == null && employeeTreeNode.Employee.Role.ProjectLeader && r < revenue)
                                 {
                                     //updating project
                                     Project newProject = new Project(projectId, projectName, employeeTreeNode.Employee, revenue);
@@ -510,14 +522,24 @@ namespace DSAL_CA2_Yr2
                                     _project.SubItems[1].Text = projectName;
                                     _project.SubItems[2].Text = revenue.ToString();
                                     _project.SubItems[3].Text = employeeTreeNode.Employee.EmployeeName;
+                                    
+                                    check = true;
                                 }
+                            }
+                            if (!check)
+                            {
+                                MessageBox.Show("Changed revenue exceeded the limit.");
                             }
                         }
                         else if (k == 1)
                         {
+                            bool check = false;
                             foreach (EmployeeTreeNode employeeTreeNode in employeeList2)
                             {
-                                if (employeeTreeNode.Employee.Project == null && !employeeTreeNode.Employee.Role.ProjectLeader)
+                                r = employeeTreeNode.Employee.Salary;
+                                employeeTreeNode.getTopAllSalary(ref r);
+                                employeeTreeNode.getAllSalary(ref r);
+                                if (employeeTreeNode.Employee.Project == null && !employeeTreeNode.Employee.Role.ProjectLeader && r < revenue)
                                 {
                                     //updating project
                                     Project newProject = new Project(projectName, employeeTreeNode.Employee, revenue);
@@ -529,7 +551,13 @@ namespace DSAL_CA2_Yr2
                                     _project.SubItems[1].Text = projectName;
                                     _project.SubItems[2].Text = revenue.ToString();
                                     _project.SubItems[3].Text = employeeTreeNode.Employee.EmployeeName;
+                                    
+                                    check=true;
                                 }
+                            }
+                            if (!check)
+                            {
+                                MessageBox.Show("Changed revenue exceeded the limit.");
                             }
                         }
 
@@ -537,14 +565,41 @@ namespace DSAL_CA2_Yr2
                 }
                 else
                 {
-                    Project newProject = new Project(projectId, projectName, _choosenProj.ProjectLeader, revenue);
+                    bool check = false;   
+                    List<EmployeeTreeNode> ep = new List<EmployeeTreeNode>();
+                    _employee.getEmployeeByName(_choosenProj.ProjectLeader.EmployeeName, ref ep);
+                    foreach (EmployeeTreeNode employeeTreeNode in ep)
+                    {
+                        
+                        if(
+                            employeeTreeNode.Employee.EmployeeId.Equals(_choosenProj.ProjectLeader.EmployeeId) &&
+                            employeeTreeNode.Employee.Role.RoleId.Equals(_choosenProj.ProjectLeader.Role.RoleId)
+                            )
+                        { 
+                            double r = employeeTreeNode.Employee.Salary;
+                            employeeTreeNode.getTopAllSalary(ref r);
+                            employeeTreeNode.getAllSalary(ref r);
 
-                    _root.UpdateProject(newProject);
+                            if(r > revenue)
+                            {
+                                Project newProject = new Project(projectId, projectName, _choosenProj.ProjectLeader, revenue);
 
-                    _project.SubItems[0].Text = projectId;
-                    _project.SubItems[1].Text = projectName;
-                    _project.SubItems[2].Text = revenue.ToString();
-                    _project.SubItems[3].Text = _choosenProj.ProjectLeader.EmployeeName;
+                                _root.UpdateProject(newProject);
+
+                                _project.SubItems[0].Text = projectId;
+                                _project.SubItems[1].Text = projectName;
+                                _project.SubItems[2].Text = revenue.ToString();
+                                _project.SubItems[3].Text = _choosenProj.ProjectLeader.EmployeeName;
+                                check = true;
+                                break;
+                            }
+
+                        }// end of if
+                    }// end of foreach
+                    if (!check)
+                    {
+                        MessageBox.Show("Changed revenue exceeded the limit.");
+                    }
                 }
             }catch (Exception ex)
             {
@@ -566,7 +621,12 @@ namespace DSAL_CA2_Yr2
                 _root.deleteProject(_choosenProj.ProjectId);
                 listviewProjectList.Items.RemoveAt(_project.Index);
 
+                tbEditProjectId.Clear();
+                tbEditProjectName.Clear();
+                tbEditRevenue.Clear();
 
+                comboEditTeamLeader.Items.Clear();
+                comboEditTeamLeader.Text = "";
             }catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);

@@ -52,7 +52,7 @@ namespace DSAL_CA2_Yr2.Classes
                 bf.Serialize(stream, this);
                 stream.Close();
 
-                MessageBox.Show("Data is added to file");
+                MessageBox.Show("Data is added to Project file");
             }
             catch (Exception ex)
             {
