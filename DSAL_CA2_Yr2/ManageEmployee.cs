@@ -94,18 +94,17 @@ namespace DSAL_CA2_Yr2
                         else
                             check.Add(false);
                     }
-                    if (check.Contains(false)) ;
-                    else
+                    if (check.Contains(true)) 
                     {
 
-                        if (!_currentSelectedEmployee.Employee.Role.ProjectLeader && _currentSelectedEmployee.Employee.Project != null)
+                        if (!_currentSelectedEmployee.Employee.Role.ProjectLeader)
                          {
                              string proj = "";
                              foreach(EmployeeTreeNode employee in employeeList)
                              {
                                 if (proj.Equals(""))
                                     proj += employee.Employee.Project.ProjectName;
-                                else
+                                else if (employee.Employee.Project != null)
                                     proj += ", " + employee.Employee.Project.ProjectName;
                              }
                             project = proj;
@@ -468,15 +467,15 @@ namespace DSAL_CA2_Yr2
                             for (int i = 0; i < _currentSelectedEmployee.TopEmployee.SubordinateEmployee.Count; i++)
                             {
                                 if (
-                                    _currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId)
-                                     )
+                                    _currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId) &&
+                                    (
+                                    !_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.EmployeeId.Equals(_currentSelectedEmployee.Employee.EmployeeId) ||
+                                    !_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Role.RoleId.Equals(_currentSelectedEmployee.Employee.Role.RoleId)
+                                    )
+                                    )
                                 {
-                                    if (!_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.EmployeeId.Equals(_currentSelectedEmployee.Employee.EmployeeId) ||
-                                    !_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Role.RoleId.Equals(_currentSelectedEmployee.Employee.Role.RoleId))
-                                    {
                                         allrevenue += _currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Salary;
                                         check = true;
-                                    }
                                 }
                             }
 
