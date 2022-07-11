@@ -110,10 +110,6 @@ namespace DSAL_CA2_Yr2
                              }
                             project = proj;
                         }// end of foreach
-                        else
-                        {
-
-                        }
                     }
                 }// end of foreach
 
@@ -247,11 +243,13 @@ namespace DSAL_CA2_Yr2
         {
             tbConsole.Text = "Employee Added:\r\nName: "+employeeName+"\r\nPosition: "+role.RoleName+"\r\nSalary: "+salary+"\r\nDummy Data: "+dummy+"\r\nSalary Accountable: "+accountable;
             EmployeeTreeNode employee = new EmployeeTreeNode(new Employee(employeeName, salary, role, dummy, accountable));
+            _currentSelectedEmployee.AddEmployeeSubordinate(employee);
+            
             if (employee.TopEmployee.Employee.Role.ProjectLeader)
             {
                 employee.Employee.Project = employee.TopEmployee.Employee.Project;
             }
-            _currentSelectedEmployee.AddEmployeeSubordinate(employee);
+            
             treeViewEmployee.SelectedNode.Expand();
         }// end of AddEmployeeCallbackFn
 
@@ -341,6 +339,10 @@ namespace DSAL_CA2_Yr2
 
                 //Add subordinate
                 officerNode.AddEmployeeSubordinate(treeNode);
+                if (officerNode.Employee.Role.ProjectLeader)
+                {
+                    treeNode.Employee.Project = officerNode.Employee.Project;
+                }
                 officerNode.Expand();
 
                 //Set Text
@@ -422,7 +424,7 @@ namespace DSAL_CA2_Yr2
             tbConsole.Text = employee.Employee.EmployeeName + " has been swapped with " + _currentSelectedEmployee.Employee.EmployeeName;
         }//end of SwapEmployeeCallbackFn
 
-        // Remove Employee [ NOT DONE / NEED CHANGING? ]
+        // Remove Employee [ DONE ]
         private void MenuItemRemoveEmployee_Click(object sender, EventArgs e)
         {
             _currentSelectedEmployee = (EmployeeTreeNode)treeViewEmployee.SelectedNode;
@@ -430,7 +432,7 @@ namespace DSAL_CA2_Yr2
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
             _root.getSameEmployeeRolesById(_currentSelectedEmployee.Employee.EmployeeId, ref employeeList);
 
-            // there is multiple employee
+            // there is multiple employee ---------------------------------------------------
             if (employeeList.Count > 1)
             {
                 // There is no subordinate and project
@@ -450,28 +452,86 @@ namespace DSAL_CA2_Yr2
 
                 else
                 {
-                    string text = "The employee can only be removed if there are no subordinates, no assigned projects or if after removal will still remain a full team. Would you like to swap the employee with another first?";
-                    DialogResult dialogResult = MessageBox.Show(text, "Swap Employee", MessageBoxButtons.YesNo);
-
-                    // [ DO SWAPING HERE ]
-                    if (dialogResult == DialogResult.Yes)
+                    bool del = true;
+                    if (_currentSelectedEmployee.TopEmployee.Employee.Role.ProjectLeader)
                     {
-                        // Clone treeNode
-                        EmployeeTreeNode root = (EmployeeTreeNode)_root.Clone();
+                        List<bool> checking = new List<bool>();
+                        List<RoleTreeNode> roleList = new List<RoleTreeNode>();
+                        _role.getSubordinateRoleById(_currentSelectedEmployee.TopEmployee.Employee.Role.RoleId, ref roleList);
+                        double allrevenue = _currentSelectedEmployee.Employee.Salary;
+                        _currentSelectedEmployee.getTopAllSalary(ref allrevenue);
+
+                        foreach (RoleTreeNode roleTreeNode in roleList)
+                        {
+                            bool check = false;
+
+                            for (int i = 0; i < _currentSelectedEmployee.TopEmployee.SubordinateEmployee.Count; i++)
+                            {
+                                if (
+                                    _currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId)
+                                     )
+                                {
+                                    if (!_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.EmployeeId.Equals(_currentSelectedEmployee.Employee.EmployeeId) ||
+                                    !_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Role.RoleId.Equals(_currentSelectedEmployee.Employee.Role.RoleId))
+                                    {
+                                        allrevenue += _currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Salary;
+                                        check = true;
+                                    }
+                                }
+                            }
+
+                            checking.Add(check);
+                        }
+
+                        if (!checking.Contains(false))
+                        {
+                            del = false;
+                        }
+
+                        if (allrevenue < _currentSelectedEmployee.Employee.Project.Revenue)
+                        {
+                            MessageBox.Show("Unable to delete employee as total revenue will be lesser than project revenue");
+                            del = true;
+                        }
+                    }
+
+                    if (del)
+                    {
+                        string text = "The employee can only be removed if there are no subordinates, no assigned projects or if after removal will still remain a full team. Would you like to swap the employee with another first?";
+                        DialogResult dialogResult = MessageBox.Show(text, "Swap Employee", MessageBoxButtons.YesNo);
+
+                        // [ DO SWAPING HERE ]
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            // Clone treeNode
+                            EmployeeTreeNode root = (EmployeeTreeNode)_root.Clone();
 
 
-                        ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
-                            (EmployeeTreeNode)root,
-                            _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName,
-                            _currentSelectedEmployee.Employee.Role.RoleId
-                            );
-                        swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
-                        swapForm.ShowDialog();
+                            ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
+                                (EmployeeTreeNode)root,
+                                _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName,
+                                _currentSelectedEmployee.Employee.Role.RoleId
+                                );
+                            swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
+                            swapForm.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        // delete employee
+                        DialogResult dialogResult = MessageBox.Show("Confirm removal of employee? Click OK to proceed", "Confirm Deletion", MessageBoxButtons.YesNo);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            string name = _currentSelectedEmployee.Employee.EmployeeName;
+                            _root.RemoveEmployeeByIdAndRoleId(_currentSelectedEmployee.Employee.EmployeeId, _currentSelectedEmployee.Employee.Role.RoleId);
+                            _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
+                            tbConsole.Text = name + " has been removed";
+                        }
                     }
                 }
             }
 
-            //there is only 1 employee
+            //there is only 1 employee ---------------------------------------------------------------------------
             else
             {
                 // if proj change to class, condition put as [ _currentSelectedEmployee.Employee.Project.Count == 0 ]
@@ -486,32 +546,91 @@ namespace DSAL_CA2_Yr2
                     {
                         string name = _currentSelectedEmployee.Employee.EmployeeName;
                         _root.RemoveEmployee(_currentSelectedEmployee.Employee.EmployeeId);
+                        _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
                         tbConsole.Text = name + " has been removed";
                     }
                 }
-                // if proj change to class, condition put as [ _currentSelectedEmployee.Employee.Project.Count != 0 ]
                 else 
                 {
-                    string text = "The employee can only be removed if there are no subordinates, no assigned projects or if after removal will still remain a full team. Would you like to swap the employee with another first?";
-                    DialogResult dialogResult = MessageBox.Show(text, "Swap Employee", MessageBoxButtons.YesNo);
-
-                    // [ DO SWAPING HERE ]
-                    if (dialogResult == DialogResult.Yes)
+                    // checking
+                    bool del = true;
+                    if( _currentSelectedEmployee.TopEmployee.Employee.Role.ProjectLeader ) 
                     {
-                        // Clone treeNode
-                        EmployeeTreeNode root = (EmployeeTreeNode)_root.Clone();
+                        List<bool> checking = new List<bool>();
+                        List<RoleTreeNode> roleList = new List<RoleTreeNode>();
+                        _role.getSubordinateRoleById(_currentSelectedEmployee.TopEmployee.Employee.Role.RoleId, ref roleList);
+                        double allrevenue = _currentSelectedEmployee.Employee.Salary;
+                        _currentSelectedEmployee.getTopAllSalary(ref allrevenue);
+                        
+                        foreach (RoleTreeNode roleTreeNode in roleList)
+                        {
+                            bool check = false;
+
+                            for (int i = 0; i < _currentSelectedEmployee.TopEmployee.SubordinateEmployee.Count; i++)
+                            {
+                                //MessageBox.Show(_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.EmployeeName);
+                                if (
+                                    _currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId) &&
+                                    (
+                                    !_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.EmployeeId.Equals(_currentSelectedEmployee.Employee.EmployeeId) ||
+                                    !_currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Role.RoleId.Equals(_currentSelectedEmployee.Employee.Role.RoleId)
+                                    )
+                                     )
+                                {
+                                    allrevenue += _currentSelectedEmployee.TopEmployee.SubordinateEmployee[i].Employee.Salary;
+                                    check = true;
+                                }
+                            }
+
+                            checking.Add(check);
+                        }
+                        
+                        if (!checking.Contains(false))
+                        {
+                            del = false;
+                        }
+                        
+                        if(allrevenue < _currentSelectedEmployee.Employee.Project.Revenue)
+                        {
+                            MessageBox.Show("Unable to delete employee as total revenue will be lesser than project revenue");
+                            del = true;
+                        }
+                    }
+                    if (del)
+                    {
+                        string text = "The employee can only be removed if there are no subordinates, no assigned projects or if after removal will still remain a full team. Would you like to swap the employee with another first?";
+                        DialogResult dialogResult = MessageBox.Show(text, "Swap Employee", MessageBoxButtons.YesNo);
+
+                        // [ DO SWAPING HERE ]
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            // Clone treeNode
+                            EmployeeTreeNode root = (EmployeeTreeNode)_root.Clone();
 
 
-                        ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
-                            (EmployeeTreeNode)root,
-                            _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName,
-                            _currentSelectedEmployee.Employee.Role.RoleId
-                            );
-                        swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
-                        swapForm.ShowDialog();
+                            ReplaceEmployeeForm swapForm = new ReplaceEmployeeForm(
+                                (EmployeeTreeNode)root,
+                                _currentSelectedEmployee.Employee.EmployeeName + " - " + _currentSelectedEmployee.Employee.Role.RoleName,
+                                _currentSelectedEmployee.Employee.Role.RoleId
+                                );
+                            swapForm.SwapEmployeeCallbackFn = SwapEmployeeCallbackFn;
+                            swapForm.ShowDialog();
+                        }
+                    }
+                    else
+                    {
+                        // delete employee
+                        DialogResult dialogResult = MessageBox.Show("Confirm removal of employee? Click OK to proceed", "Confirm Deletion", MessageBoxButtons.YesNo);
+                        if (dialogResult == DialogResult.Yes)
+                        {
+                            string name = _currentSelectedEmployee.Employee.EmployeeName;
+                            _root.RemoveEmployeeByIdAndRoleId(_currentSelectedEmployee.Employee.EmployeeId, _currentSelectedEmployee.Employee.Role.RoleId);
+                            _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
+                            tbConsole.Text = name + " has been removed";
+                        }
                     }
                 }
-            }
+            }// end of else
         }// end of MenuItemRemoveEmployee_Click
         
         // End of Edit/update/remove/add Employee in Context Menu ----------------------------------------------------------------------------

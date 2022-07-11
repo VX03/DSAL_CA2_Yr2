@@ -356,6 +356,22 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }//end of Remove Employee
+        public void RemoveEmployee(string employeeId, string roleId)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.EmployeeId.Equals(employeeId) && this.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleId))
+                {
+                    this.Nodes.Remove(this.SubordinateEmployee[i]);
+                    this.SubordinateEmployee.Remove(this.SubordinateEmployee[i]);
+                    return;
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].RemoveEmployee(employeeId, roleId);
+                }
+            }
+        }//end of Remove Employee
         public void RemoveEmployeeByIdAndRoleId(string employeeId, string roleId)
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
