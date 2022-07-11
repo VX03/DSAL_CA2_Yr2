@@ -71,6 +71,14 @@ namespace DSAL_CA2_Yr2
                         employee.getTopAllSalary(ref allrevenue);
                         employee.getAllSalary(ref allrevenue);
                     }
+                    else if (employee.TopEmployee.Employee.Role.ProjectLeader)
+                    {
+                        employee.TopEmployee.getTopAllSalary(ref allrevenue);
+                        
+                        employee.TopEmployee.getAllSalary(ref allrevenue);
+                        allrevenue -= employee.Employee.Salary;
+                        allrevenue += employee.TopEmployee.Employee.Salary;
+                    }
                     else
                     {
                         employee.getTopAllSalary(ref allrevenue);
@@ -81,13 +89,18 @@ namespace DSAL_CA2_Yr2
                         return;
                     }
                 }
-                if (checkname && salary > 0)
+
+                if (checkname && salary > 0 && salary < employee.TopEmployee.Employee.Salary)
                 {
                     EditEmployeeCallbackFn(name, salary, dummy, accountable, project);
                     this.DialogResult = DialogResult.OK;
                 }
                 // errors
-                else if (salary > 0) //salary
+                else if(salary >= employee.TopEmployee.Employee.Salary)
+                {
+                    MessageBox.Show("Unable to put a salary bigger than reporting officer's");
+                }
+                else if (salary <= 0) //salary
                 {
                     MessageBox.Show("Unable to put a salary lesser or equal to 0");
                 }

@@ -37,49 +37,113 @@ namespace DSAL_CA2_Yr2
 
         private void btnSwap_Click(object sender, EventArgs e)
         {
+            bool check = true;
             if(_selectedEmployee.Employee.Project != null || _Employee.Employee.Project != null)
             {
                 double r = _selectedEmployee.Employee.Salary;
                 double r2 = _Employee.Employee.Salary;
 
-                if (_Employee.Employee.Role.ProjectLeader)
+                if (_Employee.Employee.Project != null)
                 {
-                    _Employee.getTopAllSalary(ref r);
-                    _Employee.getAllSalary(ref r);
-                }
-                else
-                {
-                    _Employee.getTopAllSalary(ref r);
-                }
-                if(r < _Employee.Employee.Project.Revenue)
-                {
-                    MessageBox.Show("Unable to swap due to the total revenue of project will be more than the whole team's");
-                    return;
+                    if (_Employee.Employee.Role.ProjectLeader)
+                    {
+                        _Employee.getTopAllSalary(ref r);
+                        _Employee.getAllSalary(ref r);
+                    }
+                    else if (_Employee.TopEmployee.Employee.Role.ProjectLeader)
+                    {
+                        EmployeeTreeNode epn = _Employee.TopEmployee;
+                        r = _Employee.TopEmployee.Employee.Salary;
+                        epn.getTopAllSalary(ref r);
+                        epn.getAllSalary(ref r);
+                    }
+                    else
+                    {
+                        _Employee.getTopAllSalary(ref r);
+                    }
+                    if (r < _Employee.Employee.Project.Revenue)
+                    {
+                        MessageBox.Show("Unable to swap due to the total revenue of project will be more than the whole team's");
+                        return;
+                    }
                 }
 
-                if (_selectedEmployee.Employee.Role.ProjectLeader)
+                if (_selectedEmployee.Employee.Project != null)
                 {
-                    _selectedEmployee.getTopAllSalary(ref r2);
-                    _selectedEmployee.getAllSalary(ref r2);
-                }
-                else
-                {
-                    _selectedEmployee.getTopAllSalary(ref r2);
-                }
-                if (r < _selectedEmployee.Employee.Project.Revenue)
-                {
-                    MessageBox.Show("Unable to swap due to the total revenue of project will be more than the whole team's");
-                    return;
+                    if (_selectedEmployee.Employee.Role.ProjectLeader)
+                    {
+                        _selectedEmployee.getTopAllSalary(ref r2);
+                        _selectedEmployee.getAllSalary(ref r2);
+                    }
+                    else if (_selectedEmployee.TopEmployee.Employee.Role.ProjectLeader)
+                    {
+                        EmployeeTreeNode epn = _selectedEmployee.TopEmployee;
+                        r2 = _selectedEmployee.TopEmployee.Employee.Salary;
+                        epn.getTopAllSalary(ref r2);
+                        epn.getAllSalary(ref r2);
+                    }
+                    else
+                    {
+                        _selectedEmployee.getTopAllSalary(ref r2);
+                    }
+                    if (r2 < _selectedEmployee.Employee.Project.Revenue)
+                    {
+                        MessageBox.Show("Unable to swap due to the total revenue of project will be more than the whole team's");
+                        return;
+                    }
                 }
             }
-            if (_selectedEmployee != null && _selectedEmployee.Employee.Role.RoleId.Equals(roleId))
+            //checking selected employee salary 
+            if(_selectedEmployee.TopEmployee != null)
+            {
+                if(_selectedEmployee.TopEmployee.Employee.Salary!= 0 && (_Employee.Employee.Salary > _selectedEmployee.TopEmployee.Employee.Salary)) 
+                {
+                    check = false;
+                    
+                }
+                if(_selectedEmployee.SubordinateEmployee.Count != 0)
+                {
+                    foreach (var subordinateEmployee in _selectedEmployee.SubordinateEmployee)
+                    {
+                        if(subordinateEmployee.Employee.Salary > _Employee.Employee.Salary)
+                        {
+                            check = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            //checking current employee salary
+            if (_Employee.TopEmployee != null)
+            {
+                if (_Employee.TopEmployee.Employee.Salary != 0 && (_selectedEmployee.Employee.Salary > _Employee.TopEmployee.Employee.Salary))
+                {
+                    check = false;
+                }
+                if (_Employee.SubordinateEmployee.Count != 0)
+                {
+                    foreach (var subordinateEmployee in _Employee.SubordinateEmployee)
+                    {
+                        if (subordinateEmployee.Employee.Salary > _selectedEmployee.Employee.Salary)
+                        {
+                            check = false;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (_selectedEmployee != null && check)
             {
                 SwapEmployeeCallbackFn(_selectedEmployee.Employee);
                 this.DialogResult = DialogResult.OK;
             }
             else
             {
-                if (_selectedEmployee == null)
+                if (!check)
+                {
+                    MessageBox.Show("Salary for swapped employees is either higher than reporting officer or lower than subordinate employees");
+                }
+                else if (_selectedEmployee == null)
                 {
                     MessageBox.Show("No employee is selected to swap with");
                 }
