@@ -80,7 +80,8 @@ namespace DSAL_CA2_Yr2.Classes
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
             {
-                revenue += this.SubordinateEmployee[i].Employee.Salary;
+                if(this.SubordinateEmployee[i].Employee.SalaryAccountable)
+                    revenue += this.SubordinateEmployee[i].Employee.Salary;
 
                 if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
                 {
@@ -93,7 +94,8 @@ namespace DSAL_CA2_Yr2.Classes
             EmployeeTreeNode TopEmployee = this.TopEmployee;
             while (TopEmployee != null)
             {
-                revenue += TopEmployee.Employee.Salary;
+                if (TopEmployee.Employee.SalaryAccountable)
+                    revenue += TopEmployee.Employee.Salary;
                 TopEmployee = TopEmployee.TopEmployee;
             }
         }
@@ -108,6 +110,21 @@ namespace DSAL_CA2_Yr2.Classes
                 if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
                 {
                     this.SubordinateEmployee[i].getEmployeeByName(name, ref employeeList);
+                }
+            }
+        }// end of getEmployeeByName
+        public void getEmployeeByIdAndRoleId(string id,string roleid, ref EmployeeTreeNode employeeList)
+        {
+            for (int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if (this.SubordinateEmployee[i].Employee.EmployeeId.Equals(id) && this.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleid))
+                {
+                    employeeList = this.SubordinateEmployee[i];
+                    return;
+                }
+                if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
+                {
+                    this.SubordinateEmployee[i].getEmployeeByIdAndRoleId(id,roleid, ref employeeList);
                 }
             }
         }// end of getEmployeeByName

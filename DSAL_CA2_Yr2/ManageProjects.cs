@@ -180,7 +180,7 @@ namespace DSAL_CA2_Yr2
                     foreach (EmployeeTreeNode employeeTreeNode3 in employee3)
                     {
                         r = employeeTreeNode3.Employee.Salary;
-                        employeeTreeNode3.getAllSalary(ref r);
+                        //employeeTreeNode3.getAllSalary(ref r);
                         employeeTreeNode3.getTopAllSalary(ref r);
                         if (
                             (employeeTreeNode3.Employee.Project == null || 

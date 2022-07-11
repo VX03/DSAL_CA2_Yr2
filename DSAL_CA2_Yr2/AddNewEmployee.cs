@@ -15,7 +15,8 @@ namespace DSAL_CA2_Yr2
         public AddEmployeeDelegate AddEmployeeCallbackFn;
         private General general = new General();
         private List<RoleTreeNode> subordinateRoles;
-        public AddNewEmployee(string reportingOfficer,List<RoleTreeNode> _subordinateRoles)
+        private double salary = 0.0;
+        public AddNewEmployee(string reportingOfficer,double salary,List<RoleTreeNode> _subordinateRoles)
         {
             InitializeComponent();
 
@@ -26,6 +27,9 @@ namespace DSAL_CA2_Yr2
             }
             comboRole.SelectedIndex = 0;
             subordinateRoles = _subordinateRoles;
+
+            this.salary = salary;
+
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -47,12 +51,16 @@ namespace DSAL_CA2_Yr2
                     }
                 }
 
-                if (checkname && role != null && salary > 0)
+                if (checkname && role != null && salary > 0 && salary < this.salary)
                 {
                     AddEmployeeCallbackFn(name.Trim(), salary, dummy, accountable, role);
                     this.DialogResult = DialogResult.OK;
                 }
                 // errors
+                else if (salary > this.salary)
+                {
+                    MessageBox.Show("Unable to put a salary larger or equal to reporting officer's");
+                }
                 else if (salary <= 0) //salary
                 {
                     MessageBox.Show("Unable to put a salary lesser or equal to 0");

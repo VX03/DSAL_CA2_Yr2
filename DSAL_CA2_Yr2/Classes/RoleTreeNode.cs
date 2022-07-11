@@ -85,6 +85,19 @@ namespace DSAL_CA2_Yr2.Classes
             }
 
         }
+        public void getRoleById(string id, ref RoleTreeNode foundRole)
+        {
+            for (int i = 0; i < this.SubordinateRoles.Count; i++)
+            {
+                if (this.SubordinateRoles[i].Role.RoleId.Equals(id))
+                {
+                    foundRole = this.SubordinateRoles[i];
+                }
+
+                this.SubordinateRoles[i].getRoleById(id, ref foundRole);
+            }
+
+        }
         public void getParentRoleByName(string roleName,ref string getRoleName)
         {
             for (int i = 0; i < this.SubordinateRoles.Count; i++)

@@ -66,10 +66,15 @@ namespace DSAL_CA2_Yr2
                 if(project != null)
                 {
                     allrevenue = salary;
-
-                    employee.getTopAllSalary(ref allrevenue);
-                    employee.getAllSalary(ref allrevenue);
-
+                    if (employee.Employee.Role.ProjectLeader)
+                    {
+                        employee.getTopAllSalary(ref allrevenue);
+                        employee.getAllSalary(ref allrevenue);
+                    }
+                    else
+                    {
+                        employee.getTopAllSalary(ref allrevenue);
+                    }
                     if(allrevenue < project.Revenue) 
                     {
                         MessageBox.Show("The salary of the project");

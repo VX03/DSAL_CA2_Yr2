@@ -148,8 +148,17 @@ namespace DSAL_CA2_Yr2
         }// End of MenuItemEditRole_Click
         private void EditRoleCallbackFn(string roleName, bool projectLeader) 
         {
-            tbConsole.Text = "Edited Role:\r\nName: "+roleName+"\r\nProjectLeader: "+projectLeader.ToString();
             _currentSelectedRole.UpdateRole(roleName,projectLeader);
+            List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
+            _employee.getAllEmployeeByRoleId(_currentSelectedRole.Role.RoleId, ref employeeList);
+
+            foreach(EmployeeTreeNode employee in employeeList)
+            {
+                employee.Employee.Role = _currentSelectedRole.Role;
+            }
+
+            tbConsole.Text = "Edited Role:\r\nName: "+roleName+"\r\nProjectLeader: "+projectLeader.ToString();
+            
 
         }//end of EditRoleCallbackFn
 
@@ -198,6 +207,7 @@ namespace DSAL_CA2_Yr2
         // Save and Load (File IO) ----------------------------------------------------------------------------------------------------
         private void btnSave_Click(object sender, EventArgs e)
         {
+            _employee.SaveToFileBinary();
             _root.SaveToFileBinary();
         }// btnSave_Click
         private void btnLoad_Click(object sender, EventArgs e)

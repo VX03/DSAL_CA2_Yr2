@@ -16,15 +16,16 @@ namespace DSAL_CA2_Yr2
         List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
         EmployeeTreeNode _root;
         EmployeeTreeNode _selectedEmployee;
+        EmployeeTreeNode _Employee;
         ProjectList _projectList = new ProjectList();
         string roleId;
-        public ReplaceEmployeeForm(EmployeeTreeNode root, string employee, string roleid)
+        public ReplaceEmployeeForm(EmployeeTreeNode root, string employee, string roleid,EmployeeTreeNode em)
         {
             InitializeComponent();
             
             roleId = roleid;
             _root = root;
-            
+            _Employee = em;
             treeViewEmployee.NodeMouseClick += new TreeNodeMouseClickEventHandler(treeViewEmployee_NodeMouseClick);
             treeViewEmployee.Nodes.Add(_root);
 
@@ -36,6 +37,41 @@ namespace DSAL_CA2_Yr2
 
         private void btnSwap_Click(object sender, EventArgs e)
         {
+            if(_selectedEmployee.Employee.Project != null || _Employee.Employee.Project != null)
+            {
+                double r = _selectedEmployee.Employee.Salary;
+                double r2 = _Employee.Employee.Salary;
+
+                if (_Employee.Employee.Role.ProjectLeader)
+                {
+                    _Employee.getTopAllSalary(ref r);
+                    _Employee.getAllSalary(ref r);
+                }
+                else
+                {
+                    _Employee.getTopAllSalary(ref r);
+                }
+                if(r < _Employee.Employee.Project.Revenue)
+                {
+                    MessageBox.Show("Unable to swap due to the total revenue of project will be more than the whole team's");
+                    return;
+                }
+
+                if (_selectedEmployee.Employee.Role.ProjectLeader)
+                {
+                    _selectedEmployee.getTopAllSalary(ref r2);
+                    _selectedEmployee.getAllSalary(ref r2);
+                }
+                else
+                {
+                    _selectedEmployee.getTopAllSalary(ref r2);
+                }
+                if (r < _selectedEmployee.Employee.Project.Revenue)
+                {
+                    MessageBox.Show("Unable to swap due to the total revenue of project will be more than the whole team's");
+                    return;
+                }
+            }
             if (_selectedEmployee != null && _selectedEmployee.Employee.Role.RoleId.Equals(roleId))
             {
                 SwapEmployeeCallbackFn(_selectedEmployee.Employee);

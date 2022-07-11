@@ -14,19 +14,35 @@ namespace DSAL_CA2_Yr2
         public delegate void EditRoleDelegate(string roleName, bool projectLeader);
         public EditRoleDelegate EditRoleCallbackFn;
         private General general = new General();
+        private EmployeeTreeNode employeeTreeNode = new EmployeeTreeNode();
+        private string roleId;
+        private bool leader;
         public EditRole(string roleName,string parentName,string roleuuid,bool leader)
         {
             InitializeComponent();
             tbId.Text = roleuuid;
+            roleId = roleuuid;
             tbParent.Text = parentName;
             tbName.Text = roleName;
             cbLeader.Checked = leader;
+            this.leader = leader;
+            employeeTreeNode = employeeTreeNode.LoadFromFileBinary();
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
             
             string name = tbName.Text;
+            bool check = false;
+            employeeTreeNode.checkHaveEmployeeForRole(roleId, ref check);
+            if (check)
+            {
+                if(this.leader != cbLeader.Checked)
+                {
+                    MessageBox.Show("There is employee under project leader role");
+                    return;
+                }
+            }
             bool checkName = general.checkAlphabetAndSpace(name);
             if (checkName)
             {
