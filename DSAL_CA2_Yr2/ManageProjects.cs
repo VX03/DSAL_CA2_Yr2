@@ -141,7 +141,7 @@ namespace DSAL_CA2_Yr2
                 List<bool> checkList = new List<bool>();
                 EmployeeTreeNode epn = employeeTreeNode;
 
-                while(epn.TopEmployee.Employee.Salary > 0 && epn.TopEmployee.Employee.SalaryAccountable)
+                while(epn.TopEmployee.Employee.Salary > 0)
                 {
                     epn = epn.TopEmployee;
                     allrevenue += epn.Employee.Salary;
@@ -155,7 +155,7 @@ namespace DSAL_CA2_Yr2
 
                         for (int i = 0; i < employeeTreeNode.SubordinateEmployee.Count; i++)
                         {
-                            if (employeeTreeNode.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId) && employeeTreeNode.SubordinateEmployee[i].Employee.SalaryAccountable)
+                            if (employeeTreeNode.SubordinateEmployee[i].Employee.Role.RoleId.Equals(roleTreeNode.Role.RoleId))
                             {
                                 allrevenue += employeeTreeNode.SubordinateEmployee[i].Employee.Salary;
                                 check = true;

@@ -14,9 +14,10 @@ namespace DSAL_CA2_Yr2
         public delegate void EditEmployeeDelegate(string employeeName, double salary, bool dummy, bool sa, Project p);
         public EditEmployeeDelegate EditEmployeeCallbackFn;
         private General general = new General();
-        private Project project = new Project();
+        private Project project;
         ProjectList projectList = new ProjectList();
         private EmployeeTreeNode employee = new EmployeeTreeNode();
+        private bool topEmployee = false;
         public EditEmployeeDetails(EmployeeTreeNode employee)
         {
             InitializeComponent();
@@ -38,18 +39,26 @@ namespace DSAL_CA2_Yr2
                 cbSalaryAccountable.Enabled = true;
             }
             
-            projectList = projectList.LoadFromFileBinary();
-            foreach(Project p in projectList.List)
+            if(employee.TopEmployee.TopEmployee == null)
             {
-                if ( 
-                    p.ProjectLeader.EmployeeId.Equals(employee.Employee.EmployeeId) && 
-                    p.ProjectLeader.Role.RoleId.Equals(employee.Employee.Role.RoleId)
-                    )
+                topEmployee = true;
+            }
+
+            projectList = projectList.LoadFromFileBinary();
+            if (projectList != null)
+            {
+                foreach (Project p in projectList.List)
                 {
-                    project = p;
-                    break;
-                }
-            }// end of foreach
+                    if (
+                        p.ProjectLeader.EmployeeId.Equals(employee.Employee.EmployeeId) &&
+                        p.ProjectLeader.Role.RoleId.Equals(employee.Employee.Role.RoleId)
+                        )
+                    {
+                        project = p;
+                        break;
+                    }
+                }// end of foreach
+            }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -62,7 +71,10 @@ namespace DSAL_CA2_Yr2
                 bool dummy = cbDummyData.Checked;
                 bool accountable = cbSalaryAccountable.Checked;
                 double salary = Double.Parse(String.Format("{0:0.00}", tbSalary.Text));
-                
+
+                bool isHigher = true;
+                employee.checkSalarywithSubordinate(ref isHigher, salary);
+
                 if(project != null)
                 {
                     allrevenue = salary;
@@ -90,13 +102,17 @@ namespace DSAL_CA2_Yr2
                     }
                 }
 
-                if (checkname && salary > 0 && salary < employee.TopEmployee.Employee.Salary)
+                if (checkname && salary > 0 && (topEmployee || salary <= employee.TopEmployee.Employee.Salary) && isHigher)
                 {
                     EditEmployeeCallbackFn(name, salary, dummy, accountable, project);
                     this.DialogResult = DialogResult.OK;
                 }
                 // errors
-                else if(salary >= employee.TopEmployee.Employee.Salary)
+                else if (!isHigher)
+                {
+                    MessageBox.Show("Unable to put a salary smaller than subordinate's");
+                }
+                else if(salary > employee.TopEmployee.Employee.Salary && !topEmployee)
                 {
                     MessageBox.Show("Unable to put a salary bigger than reporting officer's");
                 }

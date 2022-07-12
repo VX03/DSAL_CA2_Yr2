@@ -17,16 +17,23 @@ namespace DSAL_CA2_Yr2
         private EmployeeTreeNode employeeTreeNode = new EmployeeTreeNode();
         private string roleId;
         private bool leader;
-        public EditRole(string roleName,string parentName,string roleuuid,bool leader)
+        private RoleTreeNode role = new RoleTreeNode();
+        public EditRole(RoleTreeNode role, EmployeeTreeNode employee)
         {
             InitializeComponent();
-            tbId.Text = roleuuid;
-            roleId = roleuuid;
-            tbParent.Text = parentName;
-            tbName.Text = roleName;
-            cbLeader.Checked = leader;
-            this.leader = leader;
-            employeeTreeNode = employeeTreeNode.LoadFromFileBinary();
+
+            tbId.Text = role.Role.RoleId;
+            roleId = role.Role.RoleId;
+            tbParent.Text = role.TopRole.Role.RoleName;
+            tbName.Text = role.Role.RoleName;
+            cbLeader.Checked = role.Role.ProjectLeader;
+            this.leader = role.Role.ProjectLeader;
+            this.role = role;
+            employeeTreeNode = employee;
+            if(employeeTreeNode == null)
+            {
+                employeeTreeNode = new EmployeeTreeNode();
+            }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -34,12 +41,25 @@ namespace DSAL_CA2_Yr2
             
             string name = tbName.Text;
             bool check = false;
+            bool leafnode = true;
+
             employeeTreeNode.checkHaveEmployeeForRole(roleId, ref check);
             if (check)
             {
                 if(this.leader != cbLeader.Checked)
                 {
                     MessageBox.Show("There is employee under project leader role");
+                    return;
+                }
+            }
+
+            // do not allow change in project leader if there is role under
+            if (cbLeader.Checked)
+            {
+                role.checkThereIsRoleUnderSubordinate(ref leafnode);
+                if (!leafnode)
+                {
+                    MessageBox.Show("Unable to change to project leader as there is roles under your current role(s)");
                     return;
                 }
             }

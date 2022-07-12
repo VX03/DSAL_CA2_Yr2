@@ -37,6 +37,7 @@ namespace DSAL_CA2_Yr2
 
         private void btnSwap_Click(object sender, EventArgs e)
         {
+            
             bool check = true;
             if(_selectedEmployee.Employee.Project != null || _Employee.Employee.Project != null)
             {
@@ -94,18 +95,13 @@ namespace DSAL_CA2_Yr2
                 }
             }
             //checking selected employee salary 
-            if(_selectedEmployee.TopEmployee != null)
+            if(_selectedEmployee.TopEmployee != null )
             {
-                if(_selectedEmployee.TopEmployee.Employee.Salary!= 0 && (_Employee.Employee.Salary > _selectedEmployee.TopEmployee.Employee.Salary)) 
-                {
-                    check = false;
-                    
-                }
                 if(_selectedEmployee.SubordinateEmployee.Count != 0)
                 {
                     foreach (var subordinateEmployee in _selectedEmployee.SubordinateEmployee)
                     {
-                        if(subordinateEmployee.Employee.Salary > _Employee.Employee.Salary)
+                        if(subordinateEmployee.Employee.Salary > _Employee.Employee.Salary && (_Employee.Employee.Salary < _selectedEmployee.TopEmployee.Employee.Salary || _selectedEmployee.TopEmployee.Employee.Salary != 0))
                         {
                             check = false;
                             break;
@@ -113,18 +109,16 @@ namespace DSAL_CA2_Yr2
                     }
                 }
             }
+
             //checking current employee salary
             if (_Employee.TopEmployee != null)
             {
-                if (_Employee.TopEmployee.Employee.Salary != 0 && (_selectedEmployee.Employee.Salary > _Employee.TopEmployee.Employee.Salary))
-                {
-                    check = false;
-                }
+
                 if (_Employee.SubordinateEmployee.Count != 0)
                 {
                     foreach (var subordinateEmployee in _Employee.SubordinateEmployee)
                     {
-                        if (subordinateEmployee.Employee.Salary > _selectedEmployee.Employee.Salary)
+                        if (subordinateEmployee.Employee.Salary > _selectedEmployee.Employee.Salary && (_selectedEmployee.Employee.Salary < _Employee.TopEmployee.Employee.Salary || _Employee.TopEmployee.Employee.Salary != 0))
                         {
                             check = false;
                             break;
@@ -132,7 +126,9 @@ namespace DSAL_CA2_Yr2
                     }
                 }
             }
-            if (_selectedEmployee != null && check)
+            
+            //if (_selectedEmployee != null && _selectedEmployee.Employee.Role.RoleId.Equals(roleId))
+            if(_selectedEmployee != null && check)
             {
                 SwapEmployeeCallbackFn(_selectedEmployee.Employee);
                 this.DialogResult = DialogResult.OK;

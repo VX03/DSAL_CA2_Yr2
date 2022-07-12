@@ -43,7 +43,17 @@ namespace DSAL_CA2_Yr2.Classes
         }
 
         // Funtions -------------------------------------------------------------------------------------------------------
-
+        public void checkThereIsRoleUnderSubordinate(ref bool check)
+        {
+            for(int i = 0; i < _subordinateRoles.Count; i++)
+            {
+                if(_subordinateRoles[i].SubordinateRoles.Count != 0)
+                {
+                    check = false;
+                    return;
+                }
+            }
+        }
         public void AddRoleSubordinate(RoleTreeNode roleNode)
         {
             roleNode.TopRole = this;

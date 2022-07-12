@@ -30,6 +30,10 @@ namespace DSAL_CA2_Yr2
 
             _root = _root.LoadFromFileBinary();
             _employee = _employee.LoadFromFileBinary();
+            if(_employee == null)
+            {
+                _employee = new EmployeeTreeNode();
+            }
 
             if (_root == null)
             {
@@ -74,6 +78,18 @@ namespace DSAL_CA2_Yr2
                 menuItemAddRole = new ToolStripMenuItem("Add Role");
                 menuItemAddRole.Click += new EventHandler(MenuItemAddRole_Click);
                 menuStrip.Items.Add(menuItemAddRole);
+                this.ContextMenuStrip = menuStrip;
+            }
+            else if(node != null && node.TopRole.Role.ProjectLeader)
+            {
+                ContextMenuStrip menuStrip = new ContextMenuStrip();
+                menuItemEditRole = new ToolStripMenuItem("Edit Role");
+                menuItemRemoveRole = new ToolStripMenuItem("Remove Role");
+
+                menuItemEditRole.Click += new EventHandler(MenuItemEditRole_Click);
+                menuItemRemoveRole.Click += new EventHandler(MenuItemRemoveRole_Click);
+                menuStrip.Items.Add(menuItemEditRole);
+                menuStrip.Items.Add(menuItemRemoveRole);
                 this.ContextMenuStrip = menuStrip;
             }
             else if(node != null)
@@ -141,7 +157,7 @@ namespace DSAL_CA2_Yr2
 
                 tbConsole.Text = roleName + " has been selected to be edited";
 
-                EditRole editForm = new EditRole(roleName, parentName, uuid, projectLeader);
+                EditRole editForm = new EditRole(_currentSelectedRole, _employee);
                 editForm.EditRoleCallbackFn = EditRoleCallbackFn;
                 editForm.ShowDialog();
             }
@@ -150,6 +166,7 @@ namespace DSAL_CA2_Yr2
         {
             _currentSelectedRole.UpdateRole(roleName,projectLeader);
             List<EmployeeTreeNode> employeeList = new List<EmployeeTreeNode>();
+   
             _employee.getAllEmployeeByRoleId(_currentSelectedRole.Role.RoleId, ref employeeList);
 
             foreach(EmployeeTreeNode employee in employeeList)

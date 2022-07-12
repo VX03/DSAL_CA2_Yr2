@@ -140,15 +140,12 @@ namespace DSAL_CA2_Yr2
 
                 //add menu items
                 menuItemAddEmployee = new ToolStripMenuItem("Add Employee");
-                menuItemSwapEmployee = new ToolStripMenuItem("Swap Employee");
 
                 //add event handler
                 menuItemAddEmployee.Click += new EventHandler(MenuItemAddEmployee_Click);
-                menuItemSwapEmployee.Click += new EventHandler(MenuItemSwapEmployee_Click);
 
                 //menu strip add item
                 menuStrip.Items.Add(menuItemAddEmployee);
-                menuStrip.Items.Add(menuItemSwapEmployee);
 
                 this.ContextMenuStrip = menuStrip;
             }
@@ -233,7 +230,7 @@ namespace DSAL_CA2_Yr2
                 List<RoleTreeNode> subordinateRoles = new List<RoleTreeNode>(); 
                 _role.getSubordinateRoleById(_currentSelectedEmployee.Employee.Role.RoleId, ref subordinateRoles);
                 
-                AddNewEmployee addForm = new AddNewEmployee(employeeName,_currentSelectedEmployee.Employee.Salary, subordinateRoles);
+                AddNewEmployee addForm = new AddNewEmployee(_currentSelectedEmployee, subordinateRoles);
                 addForm.AddEmployeeCallbackFn = AddEmployeeCallbackFn;
                 addForm.ShowDialog();
             }
@@ -655,7 +652,8 @@ namespace DSAL_CA2_Yr2
         private void btnSave_Click(object sender, EventArgs e)
         {
             _root.SaveToFileBinary();
-            _projectList.SaveToFileBinary();
+            if(_projectList != null)
+                _projectList.SaveToFileBinary();
         }// end of btnSave_Click
         private void btnLoad_Click(object sender, EventArgs e)
         {
@@ -682,7 +680,7 @@ namespace DSAL_CA2_Yr2
             EmployeeTreeNode root;
             // Load from binary
             root = _root.LoadFromFileBinary();
-
+            treeViewEmployee.Nodes.Clear();
             if (root == null)
             {
                 root = new EmployeeTreeNode(new Employee("root", 0, _role.Role, false, false));
@@ -693,9 +691,10 @@ namespace DSAL_CA2_Yr2
                 treeViewEmployee.Nodes.Clear();
                 _root = root;
                 _root.RebuildTreeNodes();
-                treeViewEmployee.Nodes.Add(_root);
-                treeViewEmployee.ExpandAll();
+                
             }
+            treeViewEmployee.Nodes.Add(_root);
+            treeViewEmployee.ExpandAll();
         }// end of btnReset_Click
 
         // End of Save and Load (File IO) ----------------------------------------------------------------------------------------------

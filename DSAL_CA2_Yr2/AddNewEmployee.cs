@@ -16,11 +16,12 @@ namespace DSAL_CA2_Yr2
         private General general = new General();
         private List<RoleTreeNode> subordinateRoles;
         private double salary = 0.0;
-        public AddNewEmployee(string reportingOfficer,double salary,List<RoleTreeNode> _subordinateRoles)
+        private bool topRole = false;
+        public AddNewEmployee(EmployeeTreeNode officer,List<RoleTreeNode> _subordinateRoles)
         {
             InitializeComponent();
 
-            tbReportingOfficer.Text = reportingOfficer;
+            tbReportingOfficer.Text = officer.Employee.EmployeeName;
             foreach(RoleTreeNode role in _subordinateRoles)
             {
                 comboRole.Items.Add(role.Role.RoleName);
@@ -28,8 +29,11 @@ namespace DSAL_CA2_Yr2
             comboRole.SelectedIndex = 0;
             subordinateRoles = _subordinateRoles;
 
-            this.salary = salary;
-
+            this.salary = officer.Employee.Salary;
+            if(officer.TopEmployee == null)
+            {
+                topRole = true;
+            }
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
@@ -51,7 +55,7 @@ namespace DSAL_CA2_Yr2
                     }
                 }
 
-                if (checkname && role != null && salary > 0 && salary < this.salary)
+                if (checkname && role != null && salary > 0 && (salary <= this.salary || topRole))
                 {
                     AddEmployeeCallbackFn(name.Trim(), salary, dummy, accountable, role);
                     this.DialogResult = DialogResult.OK;
@@ -59,7 +63,7 @@ namespace DSAL_CA2_Yr2
                 // errors
                 else if (salary > this.salary)
                 {
-                    MessageBox.Show("Unable to put a salary larger or equal to reporting officer's");
+                    MessageBox.Show("Unable to put a salary larger to reporting officer's");
                 }
                 else if (salary <= 0) //salary
                 {

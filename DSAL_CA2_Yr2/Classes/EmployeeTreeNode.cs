@@ -80,7 +80,6 @@ namespace DSAL_CA2_Yr2.Classes
         {
             for (int i = 0; i < this.SubordinateEmployee.Count; i++)
             {
-                if(this.SubordinateEmployee[i].Employee.SalaryAccountable)
                     revenue += this.SubordinateEmployee[i].Employee.Salary;
 
                 if (this.SubordinateEmployee.Count != 0 && i < this.SubordinateEmployee.Count)
@@ -94,8 +93,7 @@ namespace DSAL_CA2_Yr2.Classes
             EmployeeTreeNode TopEmployee = this.TopEmployee;
             while (TopEmployee != null)
             {
-                if (TopEmployee.Employee.SalaryAccountable)
-                    revenue += TopEmployee.Employee.Salary;
+                revenue += TopEmployee.Employee.Salary;
                 TopEmployee = TopEmployee.TopEmployee;
             }
         }
@@ -243,7 +241,7 @@ namespace DSAL_CA2_Yr2.Classes
         }// end of getReportingOfficerTreeNode
         public void checkHaveEmployeeForRole(string role, ref bool check)
         {
-            if (this.Employee.Role.RoleId.Equals(role))
+            if (this.Employee != null && this.Employee.Role.RoleId.Equals(role))
             {
                 check = true;
             }
@@ -428,6 +426,17 @@ namespace DSAL_CA2_Yr2.Classes
             }
         }//End of RebuildTreeNodes
 
+        public void checkSalarywithSubordinate(ref bool check, double salary)
+        {
+            for(int i = 0; i < this.SubordinateEmployee.Count; i++)
+            {
+                if(salary < this.SubordinateEmployee[i].Employee.Salary)
+                {
+                    check = false;
+                    return;
+                }
+            }
+        }
         // End of Functions -----------------------------------------------------------------------------------------------
 
         // File IO Functions ----------------------------------------------------------------------------------------------
