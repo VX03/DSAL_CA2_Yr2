@@ -101,7 +101,12 @@ namespace DSAL_CA2_Yr2
                 {
                     foreach (var subordinateEmployee in _selectedEmployee.SubordinateEmployee)
                     {
-                        if(subordinateEmployee.Employee.Salary > _Employee.Employee.Salary && (_Employee.Employee.Salary < _selectedEmployee.TopEmployee.Employee.Salary || _selectedEmployee.TopEmployee.Employee.Salary != 0))
+                        if(_selectedEmployee.TopEmployee.Employee.Salary == 0 && subordinateEmployee.Employee.Salary > _Employee.Employee.Salary) 
+                        {
+                            check = false;
+                            break;
+                        }
+                        else if(subordinateEmployee.Employee.Salary > _Employee.Employee.Salary && _Employee.Employee.Salary < _selectedEmployee.TopEmployee.Employee.Salary)
                         {
                             check = false;
                             break;
@@ -118,7 +123,12 @@ namespace DSAL_CA2_Yr2
                 {
                     foreach (var subordinateEmployee in _Employee.SubordinateEmployee)
                     {
-                        if (subordinateEmployee.Employee.Salary > _selectedEmployee.Employee.Salary && (_selectedEmployee.Employee.Salary < _Employee.TopEmployee.Employee.Salary || _Employee.TopEmployee.Employee.Salary != 0))
+                        if(_Employee.TopEmployee.Employee.Salary == 0 && subordinateEmployee.Employee.Salary > _selectedEmployee.Employee.Salary)
+                        {
+                            check = false;
+                            break;
+                        }
+                        if (subordinateEmployee.Employee.Salary > _selectedEmployee.Employee.Salary && _selectedEmployee.Employee.Salary < _Employee.TopEmployee.Employee.Salary)
                         {
                             check = false;
                             break;
