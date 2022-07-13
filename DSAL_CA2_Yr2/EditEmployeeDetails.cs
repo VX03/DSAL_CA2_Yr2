@@ -45,19 +45,9 @@ namespace DSAL_CA2_Yr2
             }
 
             projectList = projectList.LoadFromFileBinary();
-            if (projectList != null)
+            if (employee.Employee.Project != null)
             {
-                foreach (Project p in projectList.List)
-                {
-                    if (
-                        p.ProjectLeader.EmployeeId.Equals(employee.Employee.EmployeeId) &&
-                        p.ProjectLeader.Role.RoleId.Equals(employee.Employee.Role.RoleId)
-                        )
-                    {
-                        project = p;
-                        break;
-                    }
-                }// end of foreach
+               project = employee.Employee.Project;
             }
         }
 
@@ -97,7 +87,7 @@ namespace DSAL_CA2_Yr2
                     }
                     if(allrevenue < project.Revenue) 
                     {
-                        MessageBox.Show("The salary of the project");
+                        MessageBox.Show("Change in salary will cause the total salary to be lower than project revenue");
                         return;
                     }
                 }

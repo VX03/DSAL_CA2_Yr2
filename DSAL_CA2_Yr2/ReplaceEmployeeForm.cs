@@ -54,9 +54,11 @@ namespace DSAL_CA2_Yr2
                     else if (_Employee.TopEmployee.Employee.Role.ProjectLeader)
                     {
                         EmployeeTreeNode epn = _Employee.TopEmployee;
-                        r = _Employee.TopEmployee.Employee.Salary;
+                        r += _Employee.TopEmployee.Employee.Salary;
                         epn.getTopAllSalary(ref r);
                         epn.getAllSalary(ref r);
+
+                        r -= _Employee.Employee.Salary;
                     }
                     else
                     {
@@ -79,9 +81,11 @@ namespace DSAL_CA2_Yr2
                     else if (_selectedEmployee.TopEmployee.Employee.Role.ProjectLeader)
                     {
                         EmployeeTreeNode epn = _selectedEmployee.TopEmployee;
-                        r2 = _selectedEmployee.TopEmployee.Employee.Salary;
+                        r2 += _selectedEmployee.TopEmployee.Employee.Salary;
                         epn.getTopAllSalary(ref r2);
                         epn.getAllSalary(ref r2);
+
+                        r2 -= _selectedEmployee.Employee.Salary;
                     }
                     else
                     {
@@ -136,7 +140,17 @@ namespace DSAL_CA2_Yr2
                     }
                 }
             }
-            
+            if(_Employee.TopEmployee.Employee.Salary != 0 && _selectedEmployee.TopEmployee.Employee.Salary != 0)
+            {
+                if(_Employee.TopEmployee.Employee.Salary < _selectedEmployee.Employee.Salary)
+                {
+                    check =false;
+                }
+                if(_selectedEmployee.TopEmployee.Employee.Salary < _Employee.Employee.Salary)
+                {
+                    check = false;
+                }
+            }
             //if (_selectedEmployee != null && _selectedEmployee.Employee.Role.RoleId.Equals(roleId))
             if(_selectedEmployee != null && check)
             {

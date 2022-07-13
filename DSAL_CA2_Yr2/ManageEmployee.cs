@@ -325,7 +325,7 @@ namespace DSAL_CA2_Yr2
                 //get reporting officer treeNode
                 _root.getReportingOfficerTreeNode(selectedRole.TopRole.Role.RoleId, reportingOfficer, ref officerNode);
 
-                if (officerNode.Employee.Salary > salary || officerNode.Employee.Salary == 0)
+                if (officerNode != null && (officerNode.Employee.Salary > salary || officerNode.Employee.Salary == 0))
                 {
                     //Create Employee and TreeNode
                     Employee newEmployee = new Employee(id, name, salary, selectedRole.Role, dummy, sa);
@@ -343,6 +343,10 @@ namespace DSAL_CA2_Yr2
                     _root.setEmployeeTreeNodeText(id);
 
                     tbConsole.Text = name + " has added " + role + " role";
+                }
+                else if(officerNode == null)
+                {
+                    MessageBox.Show("There is no reporting officer selected");
                 }
                 else
                 {
@@ -385,6 +389,8 @@ namespace DSAL_CA2_Yr2
         }// end of MenuItemSwapEmployee_Click
         private void SwapEmployeeCallbackFn(Employee selectedEmployee) 
         {
+            if (selectedEmployee == null)
+                return;
             string id  = _currentSelectedEmployee.Employee.EmployeeId;
             string name = _currentSelectedEmployee.Employee.EmployeeName;
             double salary = _currentSelectedEmployee.Employee.Salary;
@@ -401,22 +407,14 @@ namespace DSAL_CA2_Yr2
             _currentSelectedEmployee.Employee.DummyData = employee.Employee.DummyData;
             _currentSelectedEmployee.Employee.SalaryAccountable = employee.Employee.SalaryAccountable;
             _currentSelectedEmployee.Employee.Salary = employee.Employee.Salary;
-            if (_currentSelectedEmployee.Employee.Project != null)
-            {
-                _currentSelectedEmployee.Employee.Project.ProjectLeader = _currentSelectedEmployee.Employee;
-                _projectList.UpdateProject(_currentSelectedEmployee.Employee.Project);
-            }
+
 
             employee.Employee.EmployeeId = id;
             employee.Employee.EmployeeName = name;
             employee.Employee.DummyData = dummy;
             employee.Employee.SalaryAccountable = sa;
             employee.Employee.Salary = salary;
-            if(employee.Employee.Project != null)
-            {
-                employee.Employee.Project.ProjectLeader = employee.Employee;
-                _projectList.UpdateProject(employee.Employee.Project);
-            }
+
             // set treeview text
             _root.setEmployeeTreeNodeText(employee.Employee.EmployeeId);
             _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
@@ -458,7 +456,7 @@ namespace DSAL_CA2_Yr2
                         List<bool> checking = new List<bool>();
                         List<RoleTreeNode> roleList = new List<RoleTreeNode>();
                         _role.getSubordinateRoleById(_currentSelectedEmployee.TopEmployee.Employee.Role.RoleId, ref roleList);
-                        double allrevenue = _currentSelectedEmployee.Employee.Salary;
+                        double allrevenue = 0;
                         _currentSelectedEmployee.getTopAllSalary(ref allrevenue);
 
                         foreach (RoleTreeNode roleTreeNode in roleList)
@@ -560,7 +558,7 @@ namespace DSAL_CA2_Yr2
                         List<bool> checking = new List<bool>();
                         List<RoleTreeNode> roleList = new List<RoleTreeNode>();
                         _role.getSubordinateRoleById(_currentSelectedEmployee.TopEmployee.Employee.Role.RoleId, ref roleList);
-                        double allrevenue = _currentSelectedEmployee.Employee.Salary;
+                        double allrevenue = 0;
                         _currentSelectedEmployee.getTopAllSalary(ref allrevenue);
                         
                         foreach (RoleTreeNode roleTreeNode in roleList)

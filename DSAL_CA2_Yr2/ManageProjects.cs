@@ -182,10 +182,19 @@ namespace DSAL_CA2_Yr2
                         r = employeeTreeNode3.Employee.Salary;
                         //employeeTreeNode3.getAllSalary(ref r);
                         employeeTreeNode3.getTopAllSalary(ref r);
+                        if (employeeTreeNode3.Employee.Role.ProjectLeader)
+                        {
+                            employeeTreeNode3.getAllSalary(ref r);
+                        }
+                        if(employeeTreeNode3.Employee.Project == null && r >= revenue)
+                        {
+                            checking = true;
+                        }
                         if (
-                            (employeeTreeNode3.Employee.Project == null || 
-                            (employeeTreeNode3.Employee.Project != null && employeeTreeNode3.Employee.Project.ProjectId.Equals(projectId))) && 
-                            r > revenue)
+                            (employeeTreeNode3.Employee.Project != null && 
+                            employeeTreeNode3.Employee.Project.ProjectId.Equals(projectId)
+                            ) && 
+                            r >= revenue)
                         {
                             checking = true;
                         }
@@ -539,11 +548,21 @@ namespace DSAL_CA2_Yr2
                             {
                                 r = employeeTreeNode.Employee.Salary;
                                 employeeTreeNode.getTopAllSalary(ref r);
-                                employeeTreeNode.getAllSalary(ref r);
+                                //employeeTreeNode.getAllSalary(ref r);
                                 if (employeeTreeNode.Employee.Project == null && !employeeTreeNode.Employee.Role.ProjectLeader && r >= revenue)
                                 {
                                     //updating project
                                     Project newProject = new Project(projectName, employeeTreeNode.Employee, revenue);
+
+                                    List<EmployeeTreeNode> epmList = new List<EmployeeTreeNode>();
+
+                                    _employee.getEmployeeByProjectId(_choosenProj.ProjectId, ref epmList);
+                                    foreach (EmployeeTreeNode etn in epmList)
+                                    {
+                                        etn.Employee.Project = newProject;
+                                    }
+
+
                                     employeeTreeNode.Employee.Project = newProject;
 
                                     _root.UpdateProject(newProject);
@@ -581,10 +600,18 @@ namespace DSAL_CA2_Yr2
                             employeeTreeNode.getTopAllSalary(ref r);
                             employeeTreeNode.getAllSalary(ref r);
 
-                            if(r > revenue)
+                            if(r >= revenue)
                             {
+
+
                                 Project newProject = new Project(projectId, projectName, _choosenProj.ProjectLeader, revenue);
 
+                                List<EmployeeTreeNode> epmList = new List<EmployeeTreeNode>();
+                                _employee.getEmployeeByProjectId(_choosenProj.ProjectId, ref epmList);
+                                foreach (EmployeeTreeNode etn in epmList)
+                                {
+                                    etn.Employee.Project = newProject;
+                                }
                                 _root.UpdateProject(newProject);
 
                                 _project.SubItems[0].Text = projectId;
