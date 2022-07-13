@@ -12,13 +12,14 @@ namespace DSAL_CA2_Yr2
 {
     public partial class ChangeRoleOrOfficer : Form
     {
-        public delegate void ChangeRoleOrOfficerDelegate(string id, string name, string salary,string role, string reportingOfficer, bool dummy, bool sa);
+        public delegate void ChangeRoleOrOfficerDelegate(string id, string name, double salary,string role, string reportingOfficer, bool dummy, bool sa);
         public ChangeRoleOrOfficerDelegate ChangeCallbackFn;
         private General general = new General();
         RoleTreeNode role;
         EmployeeTreeNode root;
+        EmployeeTreeNode employee;
         List<string> topEmployee = new List<string>();
-        public ChangeRoleOrOfficer(string id,string roleN,string name,double salary,string topemployeeRole,string topEmployeeName, EmployeeTreeNode _root, RoleTreeNode _role)
+        public ChangeRoleOrOfficer(EmployeeTreeNode _employee, EmployeeTreeNode _root, RoleTreeNode _role)
         {
             InitializeComponent();
             if (_role == null)
@@ -36,7 +37,7 @@ namespace DSAL_CA2_Yr2
             foreach (string roleName in allRoles)
             {
                 comboRole.Items.Add(roleName);
-                if (roleName.Equals(roleN))
+                if (roleName.Equals(_employee.Employee.Role.RoleName))
                 {
                     comboRole.SelectedIndex = i;
                 }
@@ -46,7 +47,7 @@ namespace DSAL_CA2_Yr2
 
             foreach (string employeeName in topEmployee)
             {
-                if (employeeName.Equals(topEmployeeName))
+                if (employeeName.Equals(_employee.TopEmployee.Employee.EmployeeName))
                 {
                     comboReportingOfficer.SelectedIndex = e;
                 }
@@ -54,32 +55,48 @@ namespace DSAL_CA2_Yr2
                     e++;
             }// end of reporting officer
 
-            tbId.Text = id;
-            tbName.Text = name;
-            tbSalary.Text = salary.ToString();
+            tbId.Text = _employee.Employee.EmployeeId;
+            tbName.Text = _employee.Employee.EmployeeName;
+            tbSalary.Text = _employee.Employee.Salary.ToString();
+
+            employee = _employee;
         }
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            string id = tbId.Text;
-            string name = tbName.Text;
-            string salary = tbSalary.Text;
-            string reportingOfficer = comboReportingOfficer.Text;
-            string role = comboRole.Text;
-            bool dummy = cbDummyData.Checked;
-            bool sa = cbSalaryAccountable.Checked;
+            try
+            {
+                string id = tbId.Text;
+                string name = tbName.Text;
+                double salary = Double.Parse(tbSalary.Text);
+                string reportingOfficer = comboReportingOfficer.Text;
+                string role = comboRole.Text;
+                bool dummy = cbDummyData.Checked;
+                bool sa = cbSalaryAccountable.Checked;
 
-            if(reportingOfficer != null && role != null && !role.Equals("No employee to be selected"))
-            {
-                ChangeCallbackFn(id, name, salary, role, reportingOfficer, dummy, sa);
-                this.DialogResult = DialogResult.OK;
-            }
-            else
-            {
-                if (role.Equals("No employee to be selected"))
-                    MessageBox.Show("Do not select a role that have no employee");
+                EmployeeTreeNode emp = new EmployeeTreeNode();
+                RoleTreeNode r = new RoleTreeNode();
+
+                if (reportingOfficer != null && role != null && !role.Equals("No employee to be selected"))
+                {
+                    ChangeCallbackFn(id, name, salary, role, reportingOfficer, dummy, sa);
+                    this.DialogResult = DialogResult.OK;
+                }
                 else
-                    MessageBox.Show("Select value from reporting officer / role list");
+                {
+                    if (role.Equals("No employee to be selected"))
+                        MessageBox.Show("Do not select a role that have no employee");
+                    else
+                        MessageBox.Show("Select value from reporting officer / role list");
+                }
+            }
+            catch(FormatException ex)
+            {
+                MessageBox.Show("Please input a valid salary!");
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }// end of btnAdd_Click
 

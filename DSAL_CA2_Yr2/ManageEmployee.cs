@@ -299,15 +299,10 @@ namespace DSAL_CA2_Yr2
                     tbConsole.Text = employeeName + " has been selected to be change.";
 
                     ChangeRoleOrOfficer changeForm = new ChangeRoleOrOfficer(
-                        _currentSelectedEmployee.Employee.EmployeeId, // id
-                        _currentSelectedEmployee.Employee.Role.RoleName, // role
-                        _currentSelectedEmployee.Employee.EmployeeName, // name
-                        _currentSelectedEmployee.Employee.Salary, // salary
-                        _currentSelectedEmployee.TopEmployee.Employee.Role.RoleName, // reporting officer role
-                        _currentSelectedEmployee.TopEmployee.Employee.EmployeeName, // reporting officer name
+                        _currentSelectedEmployee,
                         _root,
                         _role
-                        );
+                        ); ;
                     changeForm.ChangeCallbackFn = ChangeCallbackFn;
                     changeForm.ShowDialog();
                 }
@@ -317,34 +312,42 @@ namespace DSAL_CA2_Yr2
                 }
             }
         }// end of MenuItemChange_Click
-        private void ChangeCallbackFn(string id, string name, string salary, string role, string reportingOfficer, bool dummy, bool sa) 
+        private void ChangeCallbackFn(string id, string name, double salary, string role, string reportingOfficer, bool dummy, bool sa) 
         {
             try
             {
                 EmployeeTreeNode officerNode = null;
                 RoleTreeNode selectedRole = null;
-                
+                List<RoleTreeNode> roleList = new List<RoleTreeNode>();
                 //get role
-                _role.getRoleByName(role, ref selectedRole); 
+                _role.getRoleByName(role, ref selectedRole);
+                
                 //get reporting officer treeNode
                 _root.getReportingOfficerTreeNode(selectedRole.TopRole.Role.RoleId, reportingOfficer, ref officerNode);
 
-                //Create Employee and TreeNode
-                Employee newEmployee = new Employee(id, name, Double.Parse(salary), selectedRole.Role, dummy, sa);
-                EmployeeTreeNode treeNode = new EmployeeTreeNode(newEmployee);
-
-                //Add subordinate
-                officerNode.AddEmployeeSubordinate(treeNode);
-                if (officerNode.Employee.Role.ProjectLeader)
+                if (officerNode.Employee.Salary > salary || officerNode.Employee.Salary == 0)
                 {
-                    treeNode.Employee.Project = officerNode.Employee.Project;
+                    //Create Employee and TreeNode
+                    Employee newEmployee = new Employee(id, name, salary, selectedRole.Role, dummy, sa);
+                    EmployeeTreeNode treeNode = new EmployeeTreeNode(newEmployee);
+
+                    //Add subordinate
+                    officerNode.AddEmployeeSubordinate(treeNode);
+                    if (officerNode.Employee.Role.ProjectLeader)
+                    {
+                        treeNode.Employee.Project = officerNode.Employee.Project;
+                    }
+                    officerNode.Expand();
+
+                    //Set Text
+                    _root.setEmployeeTreeNodeText(id);
+
+                    tbConsole.Text = name + " has added " + role + " role";
                 }
-                officerNode.Expand();
-
-                //Set Text
-                _root.setEmployeeTreeNodeText(id);
-
-                tbConsole.Text = name + " has added " + role +" role";
+                else
+                {
+                    MessageBox.Show("Unable to add role as current salary is higher than reporting officer's");
+                }
             }
             catch (Exception ex)
             {

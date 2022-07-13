@@ -73,6 +73,7 @@
             // tbEmployee
             // 
             this.tbEmployee.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.tbEmployee.Enabled = false;
             this.tbEmployee.Location = new System.Drawing.Point(181, 69);
             this.tbEmployee.Name = "tbEmployee";
             this.tbEmployee.Size = new System.Drawing.Size(219, 27);

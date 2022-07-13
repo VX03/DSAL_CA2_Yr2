@@ -451,6 +451,7 @@ namespace DSAL_CA2_Yr2
         {
             try
             {
+                setBackColorToWhite();
                 string projectId = tbEditProjectId.Text;
                 string projectName = tbEditProjectName.Text;
                 double revenue = Double.Parse(tbEditRevenue.Text);
@@ -505,7 +506,7 @@ namespace DSAL_CA2_Yr2
                                 employeeTreeNode.getTopAllSalary(ref r);
                                 employeeTreeNode.getAllSalary(ref r);
 
-                                if (employeeTreeNode.Employee.Project == null && employeeTreeNode.Employee.Role.ProjectLeader && r < revenue)
+                                if (employeeTreeNode.Employee.Project == null && employeeTreeNode.Employee.Role.ProjectLeader && r >= revenue)
                                 {
                                     //updating project
                                     Project newProject = new Project(projectId, projectName, employeeTreeNode.Employee, revenue);
@@ -539,7 +540,7 @@ namespace DSAL_CA2_Yr2
                                 r = employeeTreeNode.Employee.Salary;
                                 employeeTreeNode.getTopAllSalary(ref r);
                                 employeeTreeNode.getAllSalary(ref r);
-                                if (employeeTreeNode.Employee.Project == null && !employeeTreeNode.Employee.Role.ProjectLeader && r < revenue)
+                                if (employeeTreeNode.Employee.Project == null && !employeeTreeNode.Employee.Role.ProjectLeader && r >= revenue)
                                 {
                                     //updating project
                                     Project newProject = new Project(projectName, employeeTreeNode.Employee, revenue);
