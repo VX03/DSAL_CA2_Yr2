@@ -87,14 +87,21 @@ namespace DSAL_CA2_Yr2
                 if(employeeList.Count > 1)
                 {
                     List<bool> check = new List<bool>();
+                    List<bool> checkLeader = new List<bool>();
                     foreach (EmployeeTreeNode employeeTreeNode in employeeList)
                     {
                         if(employeeTreeNode.Employee.Project != null)
                             check.Add(true);
                         else
                             check.Add(false);
+
+                        if(employeeTreeNode.Employee.Role.ProjectLeader)
+                            checkLeader.Add(true);
+                        else
+                            checkLeader.Add(false);
+
                     }
-                    if (check.Contains(true)) 
+                    if (check.Contains(true) && checkLeader.Contains(true)) 
                     {
 
                         if (!_currentSelectedEmployee.Employee.Role.ProjectLeader)
@@ -628,7 +635,7 @@ namespace DSAL_CA2_Yr2
                             _root.setEmployeeTreeNodeText(_currentSelectedEmployee.Employee.EmployeeId);
                             tbConsole.Text = name + " has been removed";
                         }
-                    }
+                        }
                 }
             }// end of else
         }// end of MenuItemRemoveEmployee_Click
@@ -680,7 +687,9 @@ namespace DSAL_CA2_Yr2
         {
             EmployeeTreeNode root;
             // Load from binary
+
             root = _root.LoadFromFileBinary();
+
             treeViewEmployee.Nodes.Clear();
             if (root == null)
             {

@@ -440,7 +440,6 @@ namespace DSAL_CA2_Yr2.Classes
                 }
             }
         }//End of RebuildTreeNodes
-
         public void checkSalarywithSubordinate(ref bool check, double salary)
         {
             for(int i = 0; i < this.SubordinateEmployee.Count; i++)
@@ -451,7 +450,8 @@ namespace DSAL_CA2_Yr2.Classes
                     return;
                 }
             }
-        }
+        }// checkSalarywithSubordinate
+        
         // End of Functions -----------------------------------------------------------------------------------------------
 
         // File IO Functions ----------------------------------------------------------------------------------------------
