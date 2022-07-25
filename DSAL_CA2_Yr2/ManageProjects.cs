@@ -121,6 +121,7 @@ namespace DSAL_CA2_Yr2
             btnConfirmEdit.Enabled = enable;
             btnEditSearchTeams.Enabled = enable;
         }// end of editProjectControls
+
         public void searchTeam(double revenue, ComboBox combobox, string projectId)
         {
             combobox.Items.Clear();

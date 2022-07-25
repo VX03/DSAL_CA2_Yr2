@@ -10,6 +10,7 @@ namespace DSAL_CA2_Yr2.Classes
         private string roleId;
         private string roleName;
         private bool projectLeader;
+        // private RoleTreNode _container;
 
         public Role(string roleName, bool projectLeader) {
             this.projectLeader = projectLeader;
@@ -19,6 +20,8 @@ namespace DSAL_CA2_Yr2.Classes
         public Role() 
         {
             this.roleId = UUID.GenerateUUID();
+            this.roleName = null;
+            this.ProjectLeader = false;
         }
         public string RoleName
         {

@@ -233,6 +233,7 @@ namespace DSAL_CA2_Yr2
             treeViewRole.Nodes.Clear();
             // Load from binary
             _root = _root.LoadFromFileBinary();
+            _employee = _employee.LoadFromFileBinary();
             // Add to treeView
             _root.RebuildTreeNodes();
             treeViewRole.Nodes.Add(_root);

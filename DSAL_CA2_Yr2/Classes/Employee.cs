@@ -10,7 +10,7 @@ namespace DSAL_CA2_Yr2.Classes
         private string _employeeName;
         private string _employeeId;
         private double _salary;
-        private Project _project; //Change to project (set as project name first)
+        private Project _project;
         private Role _role;
         private bool _dummyData;
         private bool _salaryAccountable;
@@ -21,7 +21,7 @@ namespace DSAL_CA2_Yr2.Classes
             this._role = role;
             this._dummyData = dummy;
             this._salaryAccountable = accountable;
-            this.Project = null;
+            this._project = null;
             this._employeeId = UUID.GenerateUUID();
         }
         public Employee(string id, string employeeName, double salary, Role role, bool dummy, bool accountable)
@@ -32,10 +32,17 @@ namespace DSAL_CA2_Yr2.Classes
             this._salary = salary;  
             this._role = role;
             this._employeeId = id;
+            this._project = null;
         }
         public Employee()
         {
             this._employeeId= UUID.GenerateUUID();
+            this._project = null;
+            this._employeeName = null;
+            this._salaryAccountable = false;
+            this._dummyData = false;
+            this.Role = null;
+            this._salary = 0;
         }
         public string EmployeeName
         {

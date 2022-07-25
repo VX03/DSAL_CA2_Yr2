@@ -666,9 +666,10 @@ namespace DSAL_CA2_Yr2
         private void btnLoad_Click(object sender, EventArgs e)
         {
             EmployeeTreeNode root;
+            RoleTreeNode role;
             // Load from binary
             root = _root.LoadFromFileBinary();
-
+            role = _role.LoadFromFileBinary();
             if(root == null)
             {   
                 MessageBox.Show("There is no data in file");
@@ -677,6 +678,10 @@ namespace DSAL_CA2_Yr2
             {
                 treeViewEmployee.Nodes.Clear();
                 _root = root;
+                if(role != null)
+                    _role = role;
+                else
+                    _role = general.AutomaticGenerateRole();
                 _root.RebuildTreeNodes();
                 treeViewEmployee.Nodes.Add(_root);
                 treeViewEmployee.ExpandAll();
