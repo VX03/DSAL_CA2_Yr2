@@ -29,6 +29,7 @@ namespace DSAL_CA2_Yr2
             
             // [ Get data from role file ]
             _role = _role.LoadFromFileBinary();
+            _projectList = _projectList.LoadFromFileBinary();
             if (_role == null)
             {
                 _role = general.AutomaticGenerateRole();

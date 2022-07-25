@@ -134,6 +134,10 @@ namespace DSAL_CA2_Yr2
         }//end of MenuItemAddRole_Click
         private void AddRoleCallbackFn(string roleName, bool projectLeader)
         {
+            if(_currentSelectedRole.Role.ProjectLeader && projectLeader)
+            {
+                MessageBox.Show("Unable to have project leader under current role");
+            }
             tbConsole.Text = "Role Added:\r\nName: "+roleName+"\r\nProject Leader: "+projectLeader.ToString();
             RoleTreeNode tempRole = new RoleTreeNode(new Role(roleName, projectLeader));
             _currentSelectedRole.AddRoleSubordinate(tempRole);
